@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estrategia · Framework PD · Product-Market Fit + Ciclo de Vida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ════
+   RESET & TOKENS
+════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:        #06061a;
+  --bg2:       #090924;
+
+  /* Phase colours */
+  --c0: #00e5cc;  --c0d: rgba(0,229,204,.15);   --c0b: rgba(0,229,204,.22);
+  --c1: #5b8fff;  --c1d: rgba(91,143,255,.15);  --c1b: rgba(91,143,255,.22);
+  --c2: #b06aff;  --c2d: rgba(176,106,255,.15); --c2b: rgba(176,106,255,.22);
+  --c3: #ff6f61;  --c3d: rgba(255,111,97,.15);  --c3b: rgba(255,111,97,.22);
+  --c4: #ffb836;  --c4d: rgba(255,184,54,.15);  --c4b: rgba(255,184,54,.22);
+  --c5: #3ddc97;  --c5d: rgba(61,220,151,.15);  --c5b: rgba(61,220,151,.22);
+
+  /* Problem section accent */
+  --red:   #ff4d4d;
+  --red-d: rgba(255,77,77,.12);
+  --gold:  #ffb836;
+
+  /* Glass */
+  --glass:  rgba(255,255,255,.055);
+  --gb:     rgba(255,255,255,.10);
+  --blur:   22px;
+  --hi:     rgba(255,255,255,.07);
+
+  /* Text */
+  --t1: #ffff;
+  --t2: #adb0c6;
+  --t3: #adb0c6;
+  --tm: #9498c0;
+
+  /* Fonts */
+  --fp: 'Poppins', sans-serif;       /* titles/headings */
+  --fb: 'Instrument Sans', sans-serif; /* body */
+  --fm: 'JetBrains Mono', monospace;   /* labels/mono */
+
+  --spring: cubic-bezier(.34,1.56,.64,1);
+  --out:    cubic-bezier(.22,1,.36,1);
+}
+
+html{scroll-behavior:smooth;font-size:16px;}
+body{width:100%;background:var(--bg);color:var(--t1);font-family:var(--fb);
+  overflow-x:hidden;cursor:none;min-height:100vh;}
+
+body.intro-active { overflow: hidden; }
+
+/* grain */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:998;
+  opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:120px;}
+
+/* cursor */
+#cdot,#cring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);transition:none;}
+#cdot{width:7px;height:7px;background:var(--c0);box-shadow:0 0 10px var(--c0);
+  transition:background .5s,box-shadow .5s,width .2s var(--spring),height .2s var(--spring);}
+#cring{width:30px;height:30px;border:1.5px solid rgba(255,255,255,.22);
+  transition:border-color .5s;}
+
+/* orbs */
+#orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);
+  transition:background 1.2s ease,opacity 1s;}
+
+/* progress */
+#prog{position:fixed;top:0;left:0;height:2px;z-index:200;width:0%;
+  background:linear-gradient(90deg,var(--c0),var(--c1),var(--c2));
+  box-shadow:0 0 8px var(--c0);transition:width .3s;}
+
+/* ════
+   LAYOUT
+════ */
+.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:0 40px;}
+section{padding:100px 0;}
+section:first-child{padding-top:0;}
+
+/* ════
+   NAV (sticky)
+════ */
+nav#topnav{position:fixed;top:0;left:0;right:0;z-index:300;
+  background:rgba(6,6,26,.82);backdrop-filter:blur(28px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 40px;display:flex;align-items:center;justify-content:space-between;
+  height:56px;transition:background .3s;}
+.nav-brand{font-family:var(--fp);font-size:.8rem;font-weight:600;
+  color:var(--t2);letter-spacing:.02em;}
+.nav-brand em{font-style:normal;color:var(--c0);}
+.nav-acts{display:flex;gap:6px;}
+.nav-act{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);color:var(--t3);cursor:none;
+  transition:all .25s var(--out);text-decoration:none;}
+.nav-act:hover,.nav-act.active{background:rgba(0,229,204,.12);
+  border-color:rgba(0,229,204,.3);color:var(--c0);}
+
+/* ════
+   SHARED COMPONENTS
+════ */
+/* Glass card */
+.g{background:var(--glass);backdrop-filter:blur(var(--blur)) saturate(160%);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(160%);
+  border:1px solid var(--gb);border-radius:20px;
+  box-shadow:0 12px 48px rgba(0,0,0,.42),0 1px 0 var(--hi) inset;
+  position:relative;overflow:hidden;
+  transition:transform .32s var(--spring),box-shadow .32s,border-color .3s;}
+.g::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);}
+.g:hover{transform:translateY(-3px);}
+.g.glow-c0:hover{box-shadow:0 12px 48px rgba(0,0,0,.42),0 0 28px rgba(0,229,204,.18);}
+.g.glow-c1:hover{box-shadow:0 12px 48px rgba(0,0,0,.42),0 0 28px rgba(91,143,255,.18);}
+.g.glow-red:hover{box-shadow:0 12px 48px rgba(0,0,0,.42),0 0 28px rgba(255,77,77,.18);}
+
+/* Pill/eyebrow */
+.pill{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:100px;
+  font-family:var(--fm);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:500;margin-bottom:16px;width:fit-content;}
+.pill::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;
+  animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+
+/* Mono label */
+.mlabel{font-family:var(--fm);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:6px;}
+
+/* Reveal animation */
+.rv{opacity:0;transform:translateY(22px);
+  transition:opacity .7s var(--out),transform .7s var(--out);}
+.rv.vis{opacity:1;transform:translateY(0);}
+.rv2{opacity:0;transform:translateY(14px);
+  transition:opacity .55s var(--out),transform .55s var(--out);}
+.rv2.vis{opacity:1;transform:translateY(0);}
+
+/* ════
+   HERO — full viewport entry
+════ */
+#hero{min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding-top:56px;position:relative;overflow:hidden;}
+.hero-inner{padding:80px 0 60px;}
+
+.hero-meta{font-family:var(--fm);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:24px;display:flex;align-items:center;gap:12px;
+  animation:fdown .8s var(--out) .1s both;}
+.hero-meta::before{content:'';width:32px;height:1px;background:var(--c0);
+  box-shadow:0 0 8px var(--c0);}
+@keyframes fdown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+
+#hero h1{font-family:var(--fp);font-size:clamp(2.6rem,6vw,5.2rem);
+  font-weight:800;line-height:1.0;letter-spacing:-.03em;
+  animation:fdown .9s var(--out) .2s both;}
+#hero h1 .line-dim{color:var(--t3);font-weight:300;}
+#hero h1 .line-accent{
+  background:linear-gradient(135deg,var(--c0) 0%,var(--c1) 60%,var(--c2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.hero-sub{margin-top:24px;font-size:clamp(.9rem,1.3vw,1.05rem);color:var(--t3);
+  max-width:560px;line-height:1.7;animation:fdown .9s var(--out) .35s both;}
+
+.hero-cta{margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;
+  animation:fdown .9s var(--out) .5s both;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;
+  font-family:var(--fb);font-size:.9rem;font-weight:600;cursor:none;
+  transition:all .3s var(--spring);text-decoration:none;}
+.btn-primary{background:var(--c0);color:#000;box-shadow:0 0 24px rgba(0,229,204,.3);}
+.btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 0 36px rgba(0,229,204,.45);}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--t2);border:1px solid rgba(255,255,255,.1);}
+.btn-ghost:hover{background:rgba(255,255,255,.1);transform:translateY(-2px);}
+.btn-arrow{font-size:.8rem;transition:transform .25s var(--spring);}
+.btn:hover .btn-arrow{transform:translateX(4px);}
+
+/* scroll cue */
+.scroll-cue{margin-top:64px;display:flex;align-items:center;gap:10px;
+  font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);animation:fdown .9s var(--out) .7s both;cursor:none;}
+.scroll-line{width:40px;height:1px;background:var(--t3);position:relative;overflow:hidden;}
+.scroll-line::after{content:'';position:absolute;inset:0;background:var(--c0);
+  animation:scan 2s ease-in-out infinite;}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* ════
+   ACT 1 — EL PROBLEMA
+════ */
+#act1{background:linear-gradient(180deg,var(--bg) 0%,rgba(8,8,28,1) 100%);}
+
+.act-label{font-family:var(--fp);font-size:.65rem;font-weight:600;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--t3);margin-bottom:8px;display:block;}
+
+/* Lead statement */
+.lead-statement{padding:0 48px; padding-bottom: 48px; border-bottom:1px solid rgba(255,255,255,.06);}
+.ls-quote{font-family:var(--fp);font-size:clamp(1.5rem,3.5vw,2.8rem);font-weight:700;
+  line-height:1.1;letter-spacing:-.02em;max-width:900px;
+  color:var(--t2);margin-bottom:24px;}
+.ls-quote .hl-red{color:var(--red);}
+.ls-quote .hl-w{color:var(--t1);}
+
+.lead-shift{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:28px;}
+.ls-from,.ls-to{padding:14px 22px;border-radius:12px;}
+.ls-from{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.18);}
+.ls-from .ls-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+.ls-from .ls-val{font-family:var(--fp);font-size:.95rem;font-weight:600;color:var(--t2);}
+.shift-arrow{font-size:1.5rem;color:var(--t3);}
+.ls-to{background:rgba(0,229,204,.08);border:1px solid rgba(0,229,204,.2);}
+.ls-to .ls-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--c0);margin-bottom:5px;}
+.ls-to .ls-val{font-family:var(--fp);font-size:.95rem;font-weight:700;color:var(--t1);}
+
+/* Symptoms */
+.symptoms{padding:48px 0;}
+.symptoms h2{font-family:var(--fp);font-size:clamp(1.4rem,3vw,2.4rem);font-weight:700;
+  letter-spacing:-.02em;margin-bottom:8px;}
+.symptoms .h2-sub{font-size:.95rem;color:var(--t3);margin-bottom:40px;}
+
+.symp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:0px;}
+@media(max-width:900px){.symp-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.symp-grid{grid-template-columns:1fr;}}
+
+.symp-card{padding:22px 20px;cursor:default;}
+.symp-num{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;
+  color:var(--t3);margin-bottom:12px;display:block;}
+.symp-icon{font-size:1.4rem;margin-bottom:12px;display:block;}
+.symp-text{font-family:var(--fp);font-size:.92rem;font-weight:600;color:var(--t2);
+  line-height:1.4;}
+.symp-text.critical{color:var(--red);}
+
+/* PD responsibility banner */
+.pd-banner{padding:24px 28px;display:flex;align-items:center;gap:20px;
+  border-left:3px solid var(--c0);}
+.pd-banner-icon{font-size:1.8rem;flex-shrink:0;}
+.pd-banner-text{font-family:var(--fp);font-size:clamp(1rem,1.6vw,1.2rem);
+  font-weight:600;color:var(--t1);line-height:1.4;}
+.pd-banner-text em{font-style:normal;color:var(--c0);}
+
+/* ════
+   ACT 2 — EL FRAMEWORK
+════ */
+#act2{padding:100px 0;}
+
+.paradigm-shift{margin-bottom:72px;}
+.ps-title{font-family:var(--fp);font-size:clamp(1.3rem,2.8vw,2.2rem);font-weight:700;
+  letter-spacing:-.02em;text-align:center;margin-bottom:40px;}
+
+.ps-compare{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;}
+.ps-box{padding:20px 28px;text-align:center;min-width:240px;}
+.ps-box .ps-role{font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--t3);margin-bottom:8px;}
+.ps-box .ps-desc{font-family:var(--fp);font-size:.92rem;font-weight:500;color:var(--t2);}
+.ps-box.old .ps-desc{opacity:.55;}
+.ps-box.new .ps-desc{color:var(--c0);font-weight:700;}
+.ps-arrow-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--t3);}
+.ps-arrow{font-size:1.5rem;}
+.ps-arrow-label{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--c0);}
+
+/* Promise cards */
+.promise-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:64px;}
+@media(max-width:900px){.promise-grid{grid-template-columns:1fr;}}
+.promise-card{padding:26px 24px;}
+.pc-num{font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;
+  padding:4px 10px;border-radius:100px;margin-bottom:14px;
+  display:inline-block;font-weight:500;}
+.pc-title{font-family:var(--fp);font-size:1.0rem;font-weight:700;
+  margin-bottom:10px;line-height:1.3;}
+.pc-desc{font-size:.82rem;color:var(--t3);line-height:1.6;}
+
+/* Cycle diagram */
+.cycle-wrap{margin:0 auto;max-width:960px;}
+.cycle-title{font-family:var(--fp);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:700;
+  text-align:center;margin-bottom:40px;letter-spacing:-.01em;}
+
+.cycle-nodes{display:flex;align-items:stretch;gap:0;position:relative;margin-bottom:28px;}
+.cycle-node{flex:1;padding:28px 22px;text-align:center;display:flex;flex-direction:column;
+  align-items:center;gap:12px;cursor:default;border-radius:20px;
+  transition:transform .3s var(--spring);}
+.cycle-node:hover{transform:translateY(-4px);}
+.cn-emoji{font-size:2rem;}
+.cn-name{font-family:var(--fp);font-size:1rem;font-weight:700;line-height:1.2;}
+.cn-subs{font-family:var(--fm);font-size:.62rem;letter-spacing:.04em;color:var(--t3);}
+.cn-q{display:inline-block;padding:6px 14px;border-radius:100px;margin-top:4px;
+  font-family:var(--fp);font-size:.75rem;font-weight:600;}
+.cn-arrow{display:flex;align-items:center;justify-content:center;padding:0 8px;
+  color:var(--t3);font-size:1.4rem;flex-shrink:0;align-self:center;}
+
+.renewal-loop{display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px 24px;border-radius:14px;margin:0 auto;max-width:640px;
+  background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.12);}
+.rl-icon{font-size:1.1rem;}
+.rl-text{font-family:var(--fm);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);}
+.rl-arrow{font-size:1rem;color:var(--c5);opacity:.7;}
+
+/* ════
+   ACT 3 — FASES (tabs)
+════ */
+#act3{padding:80px 0 120px;}
+
+.act3-header{margin-bottom:32px;}
+.act3-header h2{font-family:var(--fp);font-size:clamp(1.4rem,3vw,2.4rem);
+  font-weight:700;letter-spacing:-.02em;margin-bottom:8px;}
+.act3-header p{font-size:.92rem;color:var(--t3);}
+
+/* tabs wrapper */
+.twrap{position:sticky;top:56px;z-index:100;
+  background:rgba(6,6,26,.88);backdrop-filter:blur(28px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:0 40px;margin:0 -40px 32px;}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding:10px 0;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:9px 18px;
+  border-radius:9px;border:none;background:transparent;cursor:none;
+  font-family:var(--fb);font-size:.8rem;font-weight:500;color:var(--t3);
+  transition:all .3s var(--out);position:relative;white-space:nowrap;}
+.tab:hover{color:var(--t2);background:rgba(255,255,255,.05);}
+.tab.on{color:var(--t1);background:var(--tc-d,rgba(255,255,255,.08));}
+.tab.on::after{content:'';position:absolute;bottom:-10px;left:18px;right:18px;
+  height:2px;border-radius:2px;background:var(--tc,#fff);box-shadow:0 0 12px var(--tc,#fff);}
+.tnum{font-family:var(--fm);font-size:.55rem;font-weight:500;width:19px;height:19px;
+  border-radius:5px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.07);transition:background .3s,color .3s;}
+.tab.on .tnum{background:var(--tc);color:#000;}
+
+/* panel */
+.panel{display:none;}
+.panel.on{display:block;animation:pin .45s var(--out) both;}
+@keyframes pin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* phase hero */
+.phase-hero{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+@media(max-width:860px){.phase-hero{grid-template-columns:1fr;}}
+
+.hcard,.cjmcard{padding:26px 28px;}
+.ptag{font-family:var(--fm);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 12px;border-radius:100px;border:1px solid var(--pc-b,rgba(255,255,255,.15));
+  color:var(--pc);background:var(--pd);display:inline-flex;align-items:center;gap:7px;
+  margin-bottom:12px;}
+.ptag::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--pc);}
+.pname{font-family:var(--fp);font-size:clamp(1.5rem,2.8vw,2.2rem);font-weight:800;
+  line-height:1.05;letter-spacing:-.02em;margin-bottom:5px;color:var(--pc);}
+.pfoc{font-family:var(--fm);font-size:.62rem;letter-spacing:.1em;color:var(--t3);
+  text-transform:uppercase;margin-bottom:14px;}
+.sq{background:var(--pd,rgba(255,255,255,.04));border:1px solid var(--pc-b,rgba(255,255,255,.08));
+  border-radius:11px;padding:14px 16px;margin-bottom:14px;}
+.sq .ql{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:5px;}
+.sq .qt{font-family:var(--fp);font-size:1.0rem;font-weight:700;color:var(--pc);line-height:1.3;}
+.pmfd{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:11px;padding:12px 14px;}
+.pmfd .pl{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:4px;}
+.pmfd .pv{font-size:.86rem;color:var(--t2);line-height:1.5;}
+.pmfd .po{font-size:.78rem;color:var(--t3);margin-top:6px;padding-top:6px;
+  border-top:1px solid rgba(255,255,255,.06);}
+
+/* PMF REPORT inside phase 0 */
+.pmf-report{margin-top:20px;}
+.pmf-report-title{font-family:var(--fp);font-size:1.1rem;font-weight:700;
+  margin-bottom:6px;color:var(--t1);}
+.pmf-report-sub{font-size:.82rem;color:var(--t3);margin-bottom:18px;}
+.pmf-criteria{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+@media(max-width:860px){.pmf-criteria{grid-template-columns:1fr;}}
+.crit-card{padding:18px 18px 14px;cursor:default;}
+.crit-num{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;
+  padding:3px 8px;border-radius:100px;margin-bottom:10px;
+  display:inline-block;}
+.crit-title{font-family:var(--fp);font-size:.9rem;font-weight:700;
+  margin-bottom:8px;color:var(--t1);}
+.crit-items{list-style:none;display:flex;flex-direction:column;gap:4px;}
+.crit-items li{font-size:.76rem;color:var(--t3);
+  display:flex;align-items:flex-start;gap:7px;padding:4px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);}
+.crit-items li:last-child{border-bottom:none;}
+.crit-items li::before{content:'·';color:var(--pc);flex-shrink:0;font-weight:700;}
+.crit-check{font-size:.7rem;color:var(--c5);margin-top:8px;padding:5px 8px;
+  border-radius:7px;background:rgba(61,220,151,.08);
+  font-family:var(--fm);letter-spacing:.06em;}
+
+/* Recommendations */
+.reco-row{display:flex;gap:10px;flex-wrap:wrap;padding:18px 20px;align-items:center;}
+.reco-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);flex-shrink:0;margin-right:4px;}
+.reco-chip{padding:7px 16px;border-radius:100px;font-family:var(--fp);
+  font-size:.78rem;font-weight:600;cursor:default;
+  transition:transform .25s var(--spring),box-shadow .25s;}
+.reco-chip:hover{transform:translateY(-2px);}
+.rc-go{background:rgba(61,220,151,.18);border:1px solid rgba(61,220,151,.3);color:var(--c5);}
+.rc-adj{background:rgba(255,184,54,.15);border:1px solid rgba(255,184,54,.28);color:var(--c4);}
+.rc-piv{background:rgba(176,106,255,.15);border:1px solid rgba(176,106,255,.28);color:var(--c2);}
+.rc-stop{background:rgba(255,77,77,.12);border:1px solid rgba(255,77,77,.25);color:var(--red);}
+.rc-imp{background:rgba(0,229,204,.13);border:1px solid rgba(0,229,204,.25);color:var(--c0);}
+
+/* CJM card */
+.cbadge{font-family:var(--fm);font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 11px;border-radius:7px;background:var(--pd);border:1px solid var(--pc-b);
+  color:var(--pc);font-weight:500;display:inline-block;margin-bottom:10px;}
+.ctitle{font-family:var(--fp);font-size:1rem;font-weight:700;color:var(--t1);
+  line-height:1.3;margin-bottom:8px;}
+.cdesc{font-size:.81rem;color:var(--t3);line-height:1.62;margin-bottom:8px;}
+.cgoal{display:flex;gap:8px;padding:8px 10px;border-radius:8px;
+  background:rgba(255,255,255,.04);margin-top:7px;}
+.cgoal .gl{font-family:var(--fm);font-size:.54rem;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--pc);flex-shrink:0;margin-top:1px;min-width:38px;}
+.cgoal .gt{font-size:.79rem;color:var(--t2);line-height:1.5;}
+
+/* Anti-patron */
+.ap{background:rgba(255,80,70,.06);border:1px solid rgba(255,80,70,.18);
+  border-radius:13px;padding:12px 16px;display:flex;gap:10px;
+  margin-bottom:18px;transition:background .3s;}
+.ap:hover{background:rgba(255,80,70,.1);}
+.api{flex-shrink:0;margin-top:1px;}
+.apl{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#ff6b6b;margin-bottom:3px;}
+.apt{font-size:.79rem;color:var(--t3);line-height:1.55;}
+
+/* 3-col */
+.tcol{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+@media(max-width:1080px){.tcol{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.tcol{grid-template-columns:1fr;}}
+.ic{padding:20px 20px 16px;}
+.ictit{display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:.59rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--pc);
+  margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.alist{display:flex;flex-direction:column;gap:5px;}
+.ai{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:7px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);
+  font-size:.77rem;color:var(--t2);
+  transition:background .2s,padding-left .2s var(--spring),border-color .2s;cursor:default;}
+.ai:hover{background:var(--pd);border-color:var(--pc-b);padding-left:13px;color:var(--t1);}
+.ai::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--pc);
+  flex-shrink:0;transition:transform .2s var(--spring);}
+.ai:hover::before{transform:scale(1.5);}
+
+.msec{margin-bottom:12px;}
+.mgl{font-family:var(--fm);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:7px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.mi{display:flex;align-items:flex-start;gap:8px;padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);cursor:default;transition:padding-left .2s;}
+.mi:hover{padding-left:5px;}
+.mi:last-child{border-bottom:none;}
+.mdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.mi strong{display:block;font-size:.75rem;font-weight:600;color:var(--t2);margin-bottom:1px;}
+.mi span{font-size:.74rem;color:var(--t3);line-height:1.4;}
+.mdiv{height:1px;background:rgba(255,255,255,.07);margin:8px 0;}
+
+/* Timeline */
+.tl{display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;
+  padding:28px 0 4px;gap:0;}
+.tl::-webkit-scrollbar{display:none;}
+.tlp{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:7px;
+  cursor:none;padding:11px 16px;border-radius:11px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  transition:all .3s var(--spring);min-width:115px;text-align:center;position:relative;}
+.tlp:hover,.tlp.on{transform:translateY(-3px);background:var(--tlc-d);
+  border-color:var(--tlc);box-shadow:0 8px 26px rgba(0,0,0,.3),0 0 18px var(--tlcg,transparent);}
+.tlnum{font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;padding:3px 7px;
+  border-radius:100px;background:rgba(255,255,255,.07);color:var(--t3);transition:all .3s;}
+.tlp.on .tlnum,.tlp:hover .tlnum{background:var(--tlc);color:#000;}
+.tllabel{font-family:var(--fp);font-size:.72rem;font-weight:600;color:var(--t3);transition:color .3s;}
+.tlp.on .tllabel,.tlp:hover .tllabel{color:var(--tlc);}
+.tlemoji{font-size:.95rem;opacity:.7;}
+.tlarr{flex-shrink:0;color:var(--t3);opacity:.3;font-size:.8rem;padding:0 4px;}
+
+/* Footer */
+footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.fbrand{font-family:var(--fp);font-size:.75rem;font-weight:600;color:var(--t3);}
+.fnote{font-size:.74rem;color:var(--t3);}
+
+/* ════
+   INTRO QUOTE OVERLAY
+   💡 Para ocultar el intro, comenta desde
+      <!-- INTRO-QUOTE-START --> hasta
+      <!-- INTRO-QUOTE-END --> en el HTML,
+      y comenta el bloque /* INTRO-QUOTE-JS *\/
+      en el script al final.
+════ */
+#intro-overlay{
+  position:fixed;inset:0;z-index:9000;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:40px;
+  transition:opacity .9s var(--out),transform .9s var(--out);}
+#intro-overlay.hide{opacity:0;transform:scale(1.04);pointer-events:none;}
+
+.intro-quote-wrap{
+  max-width:780px;text-align:center;
+  animation:introIn 1s var(--out) .3s both;}
+@keyframes introIn{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}}
+
+.intro-quote-mark{
+  font-family:var(--fp);font-size:6rem;line-height:.6;
+  color:var(--c0);opacity:.35;margin-bottom:8px;display:block;}
+.intro-quote-text{
+  font-family:var(--fp);font-size:clamp(1.5rem,3.5vw,2.6rem);
+  font-weight:700;line-height:1.2;letter-spacing:-.02em;
+  color:var(--t1);margin-bottom:28px;}
+.intro-quote-text .iq-accent{
+  background:linear-gradient(135deg,var(--c0) 0%,var(--c1) 60%,var(--c2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.intro-quote-author{
+  font-family:var(--fm);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);display:flex;align-items:center;justify-content:center;gap:12px;}
+.intro-quote-author::before,.intro-quote-author::after{
+  content:'';width:32px;height:1px;background:var(--c0);opacity:.5;}
+.intro-quote-name{color:var(--t2);font-weight:500;}
+.intro-quote-role{color:var(--t3);}
+
+.intro-skip{
+  position:absolute;bottom:36px;right:40px;
+  font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);cursor:none;padding:8px 16px;border-radius:8px;
+  border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);
+  transition:all .25s var(--out);}
+.intro-skip:hover{color:var(--c0);border-color:rgba(0,229,204,.3);background:rgba(0,229,204,.08);}
+
+
+/* PMF Report section (standalone after cycle) */
+#pmf-report-section{padding:0 0 80px;}
+
+
+@keyframes btn-glow {
+  0%   { box-shadow: 0 0 0px rgba(0,229,204,0);   border-color: rgba(0,229,204,0.3); }
+  33%  { box-shadow: 0 0 18px rgba(0,229,204,0.7), 0 0 35px rgba(91,143,255,0.3);  border-color: rgba(91,143,255,0.9); }
+  66%  { box-shadow: 0 0 18px rgba(91,143,255,0.7), 0 0 35px rgba(176,106,255,0.3); border-color: rgba(176,106,255,0.9); }
+  100% { box-shadow: 0 0 0px rgba(176,106,255,0); border-color: rgba(0,229,204,0.3); }
+}
+
+#intro-skip-btn {
+  animation: btn-glow 2.8s ease-in-out infinite;
+  border: 1.5px solid rgba(0,229,204,0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+#intro-skip-btn:hover {
+  transform: scale(1.05);
+  background: rgba(0,229,204,0.1);
+}
+
+.intro-quote-text {
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<!-- ════
+     INTRO-QUOTE-START
+     💡 Para ocultar este intro, comenta desde
+        esta línea hasta INTRO-QUOTE-END
+════ -->
+
+
+<div id="intro-overlay">
+  <div class="intro-quote-wrap">
+    <span class="intro-quote-mark">"</span>
+    <div class="intro-quote-text">
+      Vende el <span class="iq-accent">problema que resuelves</span>,<br>
+      no el producto que tienes
+    </div>
+    <div class="intro-quote-author">
+      <span class="intro-quote-name">Richard Branson</span>
+      <span class="intro-quote-role">· Fundador y presidente del conglomerado Virgin Group</span>
+    </div>
+  </div>
+  <button class="intro-skip" id="intro-skip-btn">Continuar →</button>
+</div>
+<!-- INTRO-QUOTE-END -->
+
+<!-- Cursor -->
+<div id="cdot"></div><div id="cring"></div>
+<!-- Progress -->
+<div id="prog"></div>
+<!-- Orbs -->
+<div id="orbs">
+  <div class="orb" id="oa" style="width:650px;height:650px;top:-180px;left:-100px;background:radial-gradient(circle,rgba(0,229,204,.24),transparent 70%);"></div>
+  <div class="orb" id="ob" style="width:550px;height:550px;bottom:-120px;right:-80px;background:radial-gradient(circle,rgba(91,143,255,.2),transparent 70%);"></div>
+  <div class="orb" id="oc" style="width:400px;height:400px;top:50%;right:18%;background:radial-gradient(circle,rgba(176,106,255,.15),transparent 70%);"></div>
+</div>
+
+<!-- NAV -->
+<nav id="topnav">
+  <span class="nav-brand">Framework  · <em>Product Designer</em></span>
+  <div class="nav-acts">
+    <a class="nav-act active" href="#act1">01 Problema</a>
+    <a class="nav-act" href="#act2">02 Framework</a>
+    <a class="nav-act" href="#act3">03 Fases</a>
+  </div>
+</nav>
+
+<!-- ════
+     HERO
+════ -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="hero-meta">Gerencia de Diseño de Experiencia de Cliente · Pilar de Estrategia</div>
+      <h1>
+        <span class="line-dim">Product-Market Fit +</span><br>
+        <span class="line-accent">Ciclo de Vida del Producto</span>
+      </h1>
+      <p class="hero-sub">Cómo suma el rol Product Designer. Un sistema evolutivo y progresivo para conectar evidencia con decisiones estratégicas.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#act1">Explorar framework <span class="btn-arrow">→</span></a>
+        <a class="btn btn-ghost" href="#act3">Ver las 6 fases <span class="btn-arrow">→</span></a>
+      </div>
+      <div class="scroll-cue"><div class="scroll-line"></div>scroll para continuar</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════
+     ACT 1 — EL PROBLEMA
+════ -->
+<section id="act1">
+  <div class="wrap">
+
+    <!-- Lead shift: líderes -->
+        <!-- Symptoms -->
+    <div class="symptoms">
+      <span class="act-label">Acto 01 · El problema</span>
+      <h2 class="rv">Hoy estamos optimizando lo incorrecto</h2>
+      <p class="h2-sub rv">Cuatro síntomas de un sistema roto:</p>
+
+      <div class="symp-grid lead-statement">
+        <div class="g symp-card rv glow-red">
+          <span class="symp-num">01</span>
+          <span class="symp-icon">⏰</span>
+          <div class="symp-text">Diseño entra tarde — cuando ya hay solución definida</div>
+        </div>
+        <div class="g symp-card rv glow-red" style="transition-delay:.1s;">
+          <span class="symp-num">02</span>
+          <span class="symp-icon">🔍</span>
+          <div class="symp-text">Evidenciamos con investigaciones la problematica actual, Diseñamos flujos y UI, no el problema correcto</div>
+        </div>
+        <div class="g symp-card rv glow-red" style="transition-delay:.18s;">
+          <span class="symp-num">03</span>
+          <span class="symp-icon">📊</span>
+          <div class="symp-text">Métricas desconectadas de decisiones — o inexistentes</div>
+        </div>
+        <div class="g symp-card rv glow-red" style="transition-delay:.26s;">
+          <span class="symp-num">04</span>
+          <span class="symp-icon">📦</span>
+          <div class="symp-text critical">Mucho delivery. Poca evidencia de entrega de valor.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rv">
+      <div class="ls-quote">
+        Hoy estamos midiendo éxito de diseño con
+        <span class="hl-red">outputs</span>, no con
+        <span class="hl-w">outcomes</span>
+      </div>
+      <p style="font-size:.92rem;color:var(--t3);margin-bottom:24px;">Como líderes, tenemos una responsabilidad concreta frente a este cambio:</p>
+      <div class="lead-shift">
+        <div class="ls-from g">
+          <div class="ls-label">Hoy gestionamos</div>
+          <div class="ls-val">Entregables y acompañamiento de outputs</div>
+        </div>
+        <div class="shift-arrow">→</div>
+        <div class="ls-to g">
+          <div class="ls-label">El cambio que necesitamos</div>
+          <div class="ls-val">Gestionar y acompañar impacto real</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════
+     ACT 2 — EL FRAMEWORK
+════ -->
+<section id="act2">
+  <div class="wrap">
+    <span class="act-label rv">Acto 02 · El framework como respuesta</span>
+
+    <!-- Paradigm shift -->
+    <div class="paradigm-shift">
+      <h2 class="ps-title rv" style="font-family:var(--fp);">Cambio de paradigma</h2>
+      <div class="ps-compare rv">
+        <div class="g ps-box old">
+          <div class="ps-role">Antes · UX / UI</div>
+          <div class="ps-desc">Investigación de usuario, flujos e interfaz</div>
+        </div>
+        <div class="ps-arrow-wrap">
+          <div class="ps-arrow">↓</div>
+          <div class="ps-arrow-label">Evoluciona a</div>
+        </div>
+        <div class="g ps-box new">
+          <div class="ps-role">Ahora · Product Designer</div>
+          <div class="ps-desc">Gestión de riesgo + adopción + valor<br><span style="font-size:.76rem;opacity:.65;font-weight:400;">(Abraza UX / UI)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Promises -->
+    <div class="promise-grid">
+      <div class="g promise-card rv" style="--pc:var(--c0);--pd:var(--c0d);">
+        <span class="pc-num" style="background:var(--c0d);color:var(--c0);border:1px solid var(--c0b);">01</span>
+        <div class="pc-title" style="color:var(--c0);">Actor estratégico</div>
+        <p class="pc-desc">El framework redefine al Product Designer como conector entre problema, negocio y experiencia a lo largo de todo el ciclo de vida del producto.</p>
+      </div>
+      <div class="g promise-card rv" style="--pc:var(--c1);--pd:var(--c1d);transition-delay:.1s;">
+        <span class="pc-num" style="background:var(--c1d);color:var(--c1);border:1px solid var(--c1b);">02</span>
+        <div class="pc-title" style="color:var(--c1);">Decisiones con evidencia</div>
+        <p class="pc-desc">Busca reducir riesgo, validar decisiones y asegurar Product-Market Fit con evidencia real — no con intuición o entregables.</p>
+      </div>
+      <div class="g promise-card rv" style="--pc:var(--c5);--pd:var(--c5d);transition-delay:.2s;">
+        <span class="pc-num" style="background:var(--c5d);color:var(--c5);border:1px solid var(--c5b);">03</span>
+        <div class="pc-title" style="color:var(--c5);">Sistema de valor</div>
+        <p class="pc-desc">El diseño deja de ser ejecución y pasa a ser un sistema de gestión de adopción y valor sostenible para el negocio y el cliente.</p>
+      </div>
+    </div>
+
+    <!-- Cycle macro -->
+    <div class="cycle-wrap rv">
+      <h3 class="cycle-title" style="font-family:var(--fp);">Validación continua del Ciclo de Vida del Producto</h3>
+      <div class="cycle-nodes">
+        <div class="g cycle-node" style="border-color:rgba(0,229,204,.22);background:rgba(0,229,204,.07);">
+          <span class="cn-emoji">🔍</span>
+          <div class="cn-name" style="color:var(--c0);">Discovery / PMF</div>
+          <div class="cn-subs">Validar Problema · Validar Intención</div>
+          <span class="cn-q" style="background:var(--c0d);color:var(--c0);">¿Merece ser resuelto?</span>
+        </div>
+        <div class="cn-arrow">→</div>
+        <div class="g cycle-node" style="border-color:rgba(91,143,255,.22);background:rgba(91,143,255,.07);">
+          <span class="cn-emoji">⚡</span>
+          <div class="cn-name" style="color:var(--c1);">MVP / Activación</div>
+          <div class="cn-subs">Aha! Moment · Tiempo al Valor (TTV)</div>
+          <span class="cn-q" style="background:var(--c1d);color:var(--c1);">¿Siente el valor?</span>
+        </div>
+        <div class="cn-arrow">→</div>
+        <div class="g cycle-node" style="border-color:rgba(61,220,151,.22);background:rgba(61,220,151,.07);">
+          <span class="cn-emoji">📈</span>
+          <div class="cn-name" style="color:var(--c5);">Escala / Retención</div>
+          <div class="cn-subs">Hábito & Feedback · Innovación Evolutiva</div>
+          <span class="cn-q" style="background:var(--c5d);color:var(--c5);">¿Vuelve por valor?</span>
+        </div>
+      </div>
+      <div class="renewal-loop rv">
+        <span class="rl-arrow">↩</span>
+        <span class="rl-icon">♻️</span>
+        <span class="rl-text">Re-evolución · Renewal Loop · Validación continua</span>
+        <span class="rl-icon">♻️</span>
+        <span class="rl-arrow">↩</span>
+      </div>
+    </div>
+
+    <div class="g pd-banner rv" style="margin-top:32px;max-width:960px;margin-left:auto;margin-right:auto;">
+      <span class="pd-banner-icon">⚡</span>
+      <div class="pd-banner-text">El Product Designer es responsable de <em>conectar evidencia con decisiones</em> para lograr Product-Market Fit.</div>
+    </div>
+
+    <!-- PMF Readiness Report — standalone después del ciclo de vida -->
+    <div id="pmf-report-section">
+      <div class="pmf-report rv" style="margin-top:64px;">
+        <div class="g" style="padding:24px 26px;border-color:rgba(0,229,204,.2);">
+          <div class="pmf-report-title" style="font-family:var(--fp);">PMF Readiness Report</div>
+          <div class="pmf-report-sub">Evaluación preliminar antes de inversión significativa. El PD acompaña y facilita a PM y Negocio en el marco de evaluación.</div>
+          <div class="pmf-criteria">
+            <div class="g crit-card" style="--pc:var(--c0);">
+              <span class="crit-num" style="background:var(--c0d);color:var(--c0);border:1px solid rgba(0,229,204,.2);">01</span>
+              <div class="crit-title" style="font-family:var(--fp);">Problema Correcto</div>
+              <ul class="crit-items">
+                <li>Problem Statement validado</li>
+                <li>Jobs to be Done</li>
+                <li>Evidencia cualitativa + cuantitativa</li>
+              </ul>
+              <div class="crit-check">✓ Recurrente y relevante, no anecdótico</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c1);">
+              <span class="crit-num" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.2);">02</span>
+              <div class="crit-title" style="font-family:var(--fp);">Tamaño de Oportunidad (Segmento y Riesgo)</div>
+              <ul class="crit-items">
+                <li>Opportunity Assessment</li>
+                <li>Análisis de mercado</li>
+                <li>Competidores y sustitutos</li>
+              </ul>
+              <div class="crit-check" style="background:rgba(91,143,255,.08);color:var(--c1);">✓ Mercado suficiente o impacto estratégico claro</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c2);">
+              <span class="crit-num" style="background:var(--c2d);color:var(--c2);border:1px solid rgba(176,106,255,.2);">03</span>
+              <div class="crit-title" style="font-family:var(--fp);">Encaje Propuesta–Usuario</div>
+              <ul class="crit-items">
+                <li>Value Proposition Canvas</li>
+                <li>Concept testing</li>
+                <li>Fake door / Smoke test</li>
+              </ul>
+              <div class="crit-check" style="background:rgba(176,106,255,.08);color:var(--c2);">✓ Intención real de uso validada</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c3);">
+              <span class="crit-num" style="background:var(--c3d);color:var(--c3);border:1px solid rgba(255,111,97,.2);">04</span>
+              <div class="crit-title" style="font-family:var(--fp);">Hipótesis de Alto Riesgo</div>
+              <ul class="crit-items">
+                <li>Supuestos de comportamiento</li>
+                <li>Supuestos técnicos y regulatorios</li>
+                <li>Experimentos de validación</li>
+              </ul>
+              <div class="crit-check" style="background:rgba(255,111,97,.08);color:var(--c3);">✓ Alto impacto + Alta incertidumbre identificados</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c4);">
+              <span class="crit-num" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.2);">05</span>
+              <div class="crit-title" style="font-family:var(--fp);">North Star Preliminar</div>
+              <ul class="crit-items">
+                <li>Métrica que crece con PMF</li>
+                <li>Leading indicators</li>
+                <li>Lagging indicators</li>
+              </ul>
+              <div class="crit-check" style="background:rgba(255,184,54,.08);color:var(--c4);">✓ Claridad sobre qué significa ganar</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c5);">
+              <span class="crit-num" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.2);">06</span>
+              <div class="crit-title" style="font-family:var(--fp);">Señales de No-Fit</div>
+              <ul class="crit-items">
+                <li>Baja intención de uso y/o adopción</li>
+                <li>Baja comprensión de propuesta</li>
+                <li>Alto costo de cambio</li>
+              </ul>
+              <div class="crit-check">✓ Definir cuándo detener antes de construir</div>
+            </div>
+          </div>
+          <div class="g reco-row" style="border-color:rgba(255,255,255,.08);">
+            <span class="reco-label">Recomendación</span>
+            <span class="reco-chip rc-go">Avanzar a MVP</span>
+            <span class="reco-chip rc-adj">Ajustar propuesta</span>
+            <span class="reco-chip rc-piv">Pivotar segmento</span>
+            <span class="reco-chip rc-stop">Detener iniciativa</span>
+            <span class="reco-chip rc-imp">Impulsar iniciativa</span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+  </div>
+</section>
+
+<!-- ════
+     ACT 3 — FASES
+════ -->
+<section id="act3">
+  <div class="wrap">
+    <div class="act3-header rv">
+      <span class="act-label">Acto 03 · Las 6 fases del ciclo</span>
+      <h2 style="font-family:var(--fp);">PMF + Ciclo de Vida del Producto</h2>
+      <p>El PD acompaña y facilita a PM y Negocio / Segmento — conectando evidencia con decisión estratégica.</p>
+    </div>
+
+    <div class="twrap">
+      <div class="tabs" role="tablist">
+        <button class="tab on" data-p="0" style="--tc:var(--c0);--tc-d:var(--c0d)"><span class="tnum">1</span>Pre-lanzamiento</button>
+        <button class="tab" data-p="1" style="--tc:var(--c1);--tc-d:var(--c1d)"><span class="tnum">2</span>Lanzamiento MVP</button>
+        <button class="tab" data-p="2" style="--tc:var(--c2);--tc-d:var(--c2d)"><span class="tnum">3</span>Post-lanzamiento</button>
+        <button class="tab" data-p="3" style="--tc:var(--c3);--tc-d:var(--c3d)"><span class="tnum">4</span>Crecimiento</button>
+        <button class="tab" data-p="4" style="--tc:var(--c4);--tc-d:var(--c4d)"><span class="tnum">5</span>Madurez</button>
+        <button class="tab" data-p="5" style="--tc:var(--c5);--tc-d:var(--c5d)"><span class="tnum">6</span>Evolución</button>
+      </div>
+    </div>
+
+    <!-- ── PANEL 0 ── -->
+    <div class="panel on" id="p0" style="--pc:var(--c0);--pd:var(--c0d);--pc-b:rgba(0,229,204,.22);">
+      <div class="phase-hero">
+        <div class="g hcard">
+          <div class="ptag">Fase 1 · Pre-lanzamiento</div>
+          <div class="pname">Definición del<br>Cliente Potencial</div>
+          <div class="pfoc">/ Foco en reducir la incertidumbre /</div>
+          <div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Merece ser resuelto?"</div></div>
+          <div class="pmfd">
+            <div class="pl">Dimensión PMF</div>
+            <div class="pv"><strong>Readiness Report</strong> — Validamos si el problema es real y si la propuesta de valor encaja antes de construir.</div>
+            <div class="po">Objetivo: reducir riesgo estratégico antes de invertir.</div>
+          </div>
+        </div>
+        <div class="g cjmcard">
+          <span class="cbadge">Artefacto Dinámico</span>
+          <div class="ctitle">CJM · Estado Actual</div>
+          <div class="cdesc">Mapeo de cómo el usuario resuelve su necesidad hoy sin nuestro producto. Revela pain points reales y la oportunidad de negocio.</div>
+          <div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Encontrar los puntos de dolor para definir la oportunidad de negocio y el PMF.</span></div>
+          <div class="cgoal"><span class="gl">PMF</span><span class="gt"><strong>Validación de Hipótesis</strong> — Validamos si el problema es real antes de construir.</span></div>
+        </div>
+      </div>
+      <div class="tcol" style="margin-top:20px;">
+        <div class="g ic">
+          <div class="ictit">◈ Artefactos Product Designer</div>
+          <div class="alist">
+            <div class="ai">Problem Framing Canvas</div><div class="ai">Problem Statement</div>
+            <div class="ai">Value Proposition Canvas</div><div class="ai">Jobs to be Done (funcional + emocional + social)</div>
+            <div class="ai">Opportunity Assessment</div><div class="ai">North Star Preliminar</div>
+            <div class="ai">Hipótesis · Outcomes deseados</div><div class="ai">Experimentación (Discovery)</div>
+            <div class="ai">Etnografía Digital / Netnografía</div><div class="ai">Escenarios de uso</div>
+            <div class="ai">Product Market Fit · Ideación</div><div class="ai">Matriz priorización impacto vs esfuerzo</div>
+          </div>
+        </div>
+        <div class="g ic">
+          <div class="ictit">◉ Métricas</div>
+          <div class="msec"><div class="mgl">Producto + UX</div>
+            <div class="mi"><div class="mdot" style="background:var(--c0)"></div><div><strong>Adopción (Mago de Oz)</strong><span>% clics "Solicitar Crédito"</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c0)"></div><div><strong>CAC proyectado</strong><span>Costo en canales de prueba</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c0)"></div><div><strong>Tamaño de Oportunidad</strong><span>Volumen de solicitudes simuladas</span></div></div>
+          </div>
+          <div class="mdiv"></div>
+          <div class="msec"><div class="mgl">Negocio</div>
+            <div class="mi"><div class="mdot" style="background:rgba(0,229,204,.5)"></div><div><strong>Comprensión de Valor</strong><span>% usuarios que explican el beneficio</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(0,229,204,.5)"></div><div><strong>Tasa de Abandono</strong><span>Fricción en captura de datos</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(0,229,204,.5)"></div><div><strong>Deseabilidad</strong><span>NPS cualitativo post entrevista</span></div></div>
+          </div>
+        </div>
+        <div class="g ic">
+          <div class="ictit" style="color:#ff6b6b;">⚠ Anti-patrón a evitar</div>
+          <div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Saltar directo a soluciones sin mapear oportunidades. Construir el producto antes de validar que el problema es real.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 1 ── -->
+    <div class="panel" id="p1" style="--pc:var(--c1);--pd:var(--c1d);--pc-b:rgba(91,143,255,.22);">
+      <div class="phase-hero">
+        <div class="g hcard">
+          <div class="ptag">Fase 2 · Lanzamiento MVP</div>
+          <div class="pname">Nuevo Cliente<br>— Aha! Moment</div>
+          <div class="pfoc">/ Foco en la activación /</div>
+          <div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿El cliente llega al 'aha moment'?"</div></div>
+          <div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Activación</strong> — Medimos si el usuario entiende y experimenta el valor en su primer contacto.</div><div class="po">Objetivo: validar la dirección antes del desarrollo completo.</div></div>
+        </div>
+        <div class="g cjmcard">
+          <span class="cbadge">Artefacto Dinámico</span>
+          <div class="ctitle">CJM de Activación</div>
+          <div class="cdesc">Mapea los primeros momentos del cliente hasta el 'Aha! Moment'. Reducir fricción inicial y elevar tasa de colocación.</div>
+          <div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Reducir la fricción inicial y asegurar que la tasa de activación sea alta.</span></div>
+          <div class="cgoal"><span class="gl">PMF</span><span class="gt"><strong>Validación de Activación</strong> — el usuario experimenta valor en el primer contacto.</span></div>
+        </div>
+      </div>
+      <div class="tcol">
+        <div class="g ic"><div class="ictit">◈ Artefactos</div><div class="alist"><div class="ai">Onboarding design</div><div class="ai">Criterios de activación</div><div class="ai">Dashboard de métricas inicial</div><div class="ai">Framework de experimentación</div><div class="ai">Prototipos</div><div class="ai">Plan de aprendizaje post-lanzamiento</div></div></div>
+        <div class="g ic"><div class="ictit">◉ Métricas</div>
+          <div class="msec"><div class="mgl">Producto + UX</div>
+            <div class="mi"><div class="mdot" style="background:var(--c1)"></div><div><strong>Tasa de Éxito de Tarea</strong><span>Finalización del flujo de desembolso</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c1)"></div><div><strong>CSAT Inicial</strong><span>Percepción inmediata tras el uso</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c1)"></div><div><strong>Fricción en Onboarding</strong><span>Pasos donde el usuario se detiene</span></div></div>
+          </div>
+          <div class="mdiv"></div>
+          <div class="msec"><div class="mgl">Negocio</div>
+            <div class="mi"><div class="mdot" style="background:rgba(91,143,255,.5)"></div><div><strong>Tasa de Activación</strong><span>% con crédito desembolsado</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(91,143,255,.5)"></div><div><strong>Costo Operativo</strong><span>Soporte manual requerido por MVP</span></div></div>
+          </div>
+        </div>
+        <div class="g ic"><div class="ictit" style="color:#ff6b6b;">⚠ Anti-patrón a evitar</div><div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Agregar features nuevas antes de que el flujo core funcione. Optimizar lo secundario cuando el onboarding tiene un 60% de abandono.</div></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 2 ── -->
+    <div class="panel" id="p2" style="--pc:var(--c2);--pd:var(--c2d);--pc-b:rgba(176,106,255,.22);">
+      <div class="phase-hero">
+        <div class="g hcard"><div class="ptag">Fase 3 · Post-lanzamiento</div><div class="pname">Retención<br>y Hábito</div><div class="pfoc">/ Foco en la recurrencia /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿El cliente vuelve por valor, no por hábito?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Retención</strong> — Identificamos usuarios en riesgo y amplificamos a quienes ya encontraron valor.</div><div class="po">Objetivo: validar comportamiento real.</div></div></div>
+        <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM de Fricción, Recurrencia y Abandono (Churn)</div><div class="cdesc">Mapea los puntos de fuga y razones por las que el usuario deja de usar el producto.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Optimizar la retención. Eliminar pasos innecesarios para que la tarea principal sea invisible y rápida.</span></div></div>
+      </div>
+      <div class="tcol">
+        <div class="g ic"><div class="ictit">◈ Artefactos</div><div class="alist"><div class="ai">Análisis de cohortes</div><div class="ai">Experimentos A/B</div><div class="ai">Árbol de métricas activo</div><div class="ai">Señales de desenganche</div><div class="ai">Análisis por cohortes (new vs current vs dormant)</div><div class="ai">Identificación de fricciones críticas</div><div class="ai">Jobs to be Done</div></div></div>
+        <div class="g ic"><div class="ictit">◉ Métricas</div>
+          <div class="msec"><div class="mgl">Producto + UX</div>
+            <div class="mi"><div class="mdot" style="background:var(--c2)"></div><div><strong>Frecuencia de Uso</strong><span>Consulta saldo o paga</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c2)"></div><div><strong>CSAT en uso</strong><span>Percepción del cliente activo</span></div></div>
+          </div><div class="mdiv"></div>
+          <div class="msec"><div class="mgl">Negocio</div>
+            <div class="mi"><div class="mdot" style="background:rgba(176,106,255,.5)"></div><div><strong>MAU / MRU</strong><span>Activos vs que regresan mensualmente</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(176,106,255,.5)"></div><div><strong>LTV Inicial</strong><span>Valor proyectado en primeros meses</span></div></div>
+          </div>
+        </div>
+        <div class="g ic"><div class="ictit" style="color:#ff6b6b;">⚠ Anti-patrón a evitar</div><div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Asumir que la retención baja es un problema de marketing. Ignorar el CES (esfuerzo del cliente) en el flujo.</div></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3 ── -->
+    <div class="panel" id="p3" style="--pc:var(--c3);--pd:var(--c3d);--pc-b:rgba(255,111,97,.22);">
+      <div class="phase-hero">
+        <div class="g hcard"><div class="ptag">Fase 4 · Crecimiento</div><div class="pname">Escalabilidad<br>y Expansión</div><div class="pfoc">/ Foco en la expansión /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Podemos recuperar y profundizar?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Expansión</strong> — Identificamos clientes en riesgo y profundizamos a quienes ya encontraron valor.</div><div class="po">Objetivo: mejorar retención y calidad.</div></div></div>
+        <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM de Recurrencia y Expansión (Habit Loop)</div><div class="cdesc">Mapea el uso diario/semanal para identificar fricciones en la tarea principal. Busca que la tarea sea invisible y rápida.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Reducir fricción y asegurar alta tasa de activación en el uso recurrente.</span></div></div>
+      </div>
+      <div class="tcol">
+        <div class="g ic"><div class="ictit">◈ Artefactos</div><div class="alist"><div class="ai">Análisis de churn desde experiencia</div><div class="ai">Diseño de loops de referral</div><div class="ai">Experimentos de re-engagement</div><div class="ai">Jobs to be Done</div></div></div>
+        <div class="g ic"><div class="ictit">◉ Métricas</div>
+          <div class="msec"><div class="mgl">Producto + UX</div>
+            <div class="mi"><div class="mdot" style="background:var(--c3)"></div><div><strong>Tasa de Recomendación</strong><span>Clientes que actúan como promotores</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c3)"></div><div><strong>Adopción Features Secundarias</strong><span>Seguros o extras</span></div></div>
+          </div><div class="mdiv"></div>
+          <div class="msec"><div class="mgl">Negocio</div>
+            <div class="mi"><div class="mdot" style="background:rgba(255,111,97,.5)"></div><div><strong>Eficiencia de CAC</strong><span>Reducción del costo de adquisición</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(255,111,97,.5)"></div><div><strong>Margen de Contribución</strong><span>Rentabilidad por crédito colocado</span></div></div>
+          </div>
+        </div>
+        <div class="g ic"><div class="ictit" style="color:#ff6b6b;">⚠ Anti-patrón a evitar</div><div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Construir features de referidos sin entender por qué los clientes no recomiendan. Asumir que el problema es el incentivo y no la experiencia.</div></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 4 ── -->
+    <div class="panel" id="p4" style="--pc:var(--c4);--pd:var(--c4d);--pc-b:rgba(255,184,54,.22);">
+      <div class="phase-hero">
+        <div class="g hcard"><div class="ptag">Fase 5 · Madurez</div><div class="pname">Eficiencia<br>y Cross-sell</div><div class="pfoc">/ Foco en eficiencia y cross-sell /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Seguimos siendo relevantes?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Evolución del PMF</strong> — Evaluamos si el PMF sigue vigente o si el mercado evolucionó y necesitamos pivotar.</div><div class="po">Objetivo: eficiencia y rentabilidad.</div></div></div>
+        <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM de Expansión (Cross-sell / Upsell)</div><div class="cdesc">Mapea el viaje hacia el descubrimiento de nuevas funcionalidades o productos del banco.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Aumentar el CLTV del cliente a través de nuevos productos relevantes en el momento correcto.</span></div></div>
+      </div>
+      <div class="tcol">
+        <div class="g ic"><div class="ictit">◈ Artefactos</div><div class="alist"><div class="ai">Revisión de North Star</div><div class="ai">Co-creación con Power Users</div><div class="ai">Roadmap evolutivo basado en datos</div><div class="ai">Hipótesis Outcomes deseados</div><div class="ai">Jobs to be Done</div><div class="ai">Opportunity Solution Tree</div></div></div>
+        <div class="g ic"><div class="ictit">◉ Métricas</div>
+          <div class="msec"><div class="mgl">Producto + UX</div>
+            <div class="mi"><div class="mdot" style="background:var(--c4)"></div><div><strong>NPS Relacional</strong><span>Lealtad a largo plazo con la marca</span></div></div>
+          </div><div class="mdiv"></div>
+          <div class="msec"><div class="mgl">Negocio</div>
+            <div class="mi"><div class="mdot" style="background:rgba(255,184,54,.5)"></div><div><strong>Cross-sell Rate</strong><span>% de crédito que toman otro producto</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(255,184,54,.5)"></div><div><strong>Churn Rate</strong><span>Tasa de cancelación o abandono</span></div></div>
+          </div>
+        </div>
+        <div class="g ic"><div class="ictit" style="color:#ff6b6b;">⚠ Anti-patrón a evitar</div><div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Ofrecer cross-sell en momentos de fricción. Priorizar el revenue sobre la experiencia del usuario.</div></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 5 ── -->
+    <div class="panel" id="p5" style="--pc:var(--c5);--pd:var(--c5d);--pc-b:rgba(61,220,151,.22);">
+      <div class="phase-hero">
+        <div class="g hcard"><div class="ptag">Fase 6 · Evolución (Renewal)</div><div class="pname">Renewal Loop<br>— Reinvención</div><div class="pfoc">/ Foco en la reinvención /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Cómo debemos evolucionar para no ser irrelevantes?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Innovación vs. Declive</strong> — El PD detecta señales de obsolescencia, pivota la propuesta de valor y reinicia el ciclo con evidencia.</div><div class="po">El PD no espera que el producto muera — activa el Renewal Loop proactivamente desde madurez.</div></div></div>
+        <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM To-Be · Estado Futuro</div><div class="cdesc">Mapea la visión ideal a 1-2 años integrando nuevas tecnologías o modelos de negocio. Alinea a negocio y tecnología sobre el próximo gran salto.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Reiniciar el ciclo con evidencia. El activo del banco se mantiene en estado perpetuo de relevancia.</span></div></div>
+      </div>
+      <div class="tcol">
+        <div class="g ic"><div class="ictit">◈ Artefactos</div><div class="alist"><div class="ai">Radar de tendencias socioculturales</div><div class="ai">Horizon 2/3 Exploration</div><div class="ai">Mapa de obsolescencia de features</div><div class="ai">Hipótesis Outcomes deseados</div><div class="ai">Jobs to be Done</div><div class="ai">Opportunity Solution Tree</div></div></div>
+        <div class="g ic"><div class="ictit">◉ Métricas</div>
+          <div class="msec"><div class="mgl">Producto + UX</div>
+            <div class="mi"><div class="mdot" style="background:var(--c5)"></div><div><strong>Adopción Nuevos Paradigmas</strong><span>Aceptación cambios radicales en UI/UX</span></div></div>
+            <div class="mi"><div class="mdot" style="background:var(--c5)"></div><div><strong>Relevancia Percibida</strong><span>¿El usuario siente que el banco es moderno?</span></div></div>
+          </div><div class="mdiv"></div>
+          <div class="msec"><div class="mgl">Negocio</div>
+            <div class="mi"><div class="mdot" style="background:rgba(61,220,151,.5)"></div><div><strong>Lead Time de Innovación</strong><span>Velocidad para lanzar mejoras disruptivas</span></div></div>
+            <div class="mi"><div class="mdot" style="background:rgba(61,220,151,.5)"></div><div><strong>Tasa de Canibalización</strong><span>¿Reemplazamos lo viejo por algo mejor?</span></div></div>
+          </div>
+        </div>
+        <div class="g ic"><div class="ictit" style="color:#ff6b6b;">⚠ Anti-patrón a evitar</div><div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Confundir optimización con innovación. El PD no espera a que el producto muera — detecta señales de obsolescencia desde la madurez y activa el Renewal Loop.</div></div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="tl" id="tl">
+      <div class="tlp on" data-p="0" style="--tlc:var(--c0);--tlc-d:var(--c0d);--tlcg:rgba(0,229,204,.14);"><span class="tlemoji">🧪</span><span class="tlnum">F1</span><span class="tllabel">Pre-lanzamiento</span></div>
+      <span class="tlarr">→</span>
+      <div class="tlp" data-p="1" style="--tlc:var(--c1);--tlc-d:var(--c1d);--tlcg:rgba(91,143,255,.14);"><span class="tlemoji">🚀</span><span class="tlnum">F2</span><span class="tllabel">Lanzamiento</span></div>
+      <span class="tlarr">→</span>
+      <div class="tlp" data-p="2" style="--tlc:var(--c2);--tlc-d:var(--c2d);--tlcg:rgba(176,106,255,.14);"><span class="tlemoji">🔄</span><span class="tlnum">F3</span><span class="tllabel">Post-lanzamiento</span></div>
+      <span class="tlarr">→</span>
+      <div class="tlp" data-p="3" style="--tlc:var(--c3);--tlc-d:var(--c3d);--tlcg:rgba(255,111,97,.14);"><span class="tlemoji">📈</span><span class="tlnum">F4</span><span class="tllabel">Crecimiento</span></div>
+      <span class="tlarr">→</span>
+      <div class="tlp" data-p="4" style="--tlc:var(--c4);--tlc-d:var(--c4d);--tlcg:rgba(255,184,54,.14);"><span class="tlemoji">⭐</span><span class="tlnum">F5</span><span class="tllabel">Madurez</span></div>
+      <span class="tlarr">→</span>
+      <div class="tlp" data-p="5" style="--tlc:var(--c5);--tlc-d:var(--c5d);--tlcg:rgba(61,220,151,.14);"><span class="tlemoji">♻️</span><span class="tlnum">F6</span><span class="tllabel">Evolución</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <footer>
+    <span class="fbrand" style="font-family:var(--fp);">Framework Product Designer · Banco de Bogotá</span>
+    <span class="fnote">El diseño como sistema de gestión de riesgo, adopción y valor</span>
+  </footer>
+</div>
+
+<script>
+/* ── CURSOR ── */
+const cd=document.getElementById('cdot'),cr=document.getElementById('cring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;
+  cd.style.left=mx+'px';cd.style.top=my+'px';});
+(function ar(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(ar)})();
+
+/* ── SCROLL PROGRESS ── */
+const prog=document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight)*100;
+  prog.style.width=p+'%';
+},{ passive:true });
+
+/* ── NAV ACTIVE ── */
+const acts=['act1','act2','act3'];
+const navLinks=document.querySelectorAll('.nav-act');
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id));
+    }
+  });
+},{threshold:.3});
+acts.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+
+/* ── ORB COLOUR PER PHASE ── */
+const orbDefs=[
+  ['rgba(0,229,204,.24)','rgba(91,143,255,.18)','rgba(0,229,204,.13)'],
+  ['rgba(91,143,255,.26)','rgba(176,106,255,.18)','rgba(0,229,204,.11)'],
+  ['rgba(176,106,255,.26)','rgba(91,143,255,.18)','rgba(176,106,255,.13)'],
+  ['rgba(255,111,97,.24)','rgba(255,184,54,.16)','rgba(255,111,97,.12)'],
+  ['rgba(255,184,54,.24)','rgba(255,111,97,.16)','rgba(255,184,54,.12)'],
+  ['rgba(61,220,151,.24)','rgba(0,229,204,.16)','rgba(61,220,151,.12)'],
+];
+const pColors=['#00e5cc','#5b8fff','#b06aff','#ff6f61','#ffb836','#3ddc97'];
+const oa=document.getElementById('oa'),ob=document.getElementById('ob'),oc=document.getElementById('oc');
+function setOrbs(n){
+  const[a,b,c]=orbDefs[n];
+  oa.style.background=`radial-gradient(circle,${a},transparent 70%)`;
+  ob.style.background=`radial-gradient(circle,${b},transparent 70%)`;
+  oc.style.background=`radial-gradient(circle,${c},transparent 70%)`;
+  cd.style.background=pColors[n];cd.style.boxShadow=`0 0 10px ${pColors[n]}`;
+  cr.style.borderColor=pColors[n]+'44';
+}
+
+/* ── TABS ── */
+let cur=0;
+function goPhase(n){
+  if(n===cur)return;
+  cur=n;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',i===n));
+  document.querySelectorAll('.panel').forEach((p,i)=>p.classList.toggle('on',i===n));
+  document.querySelectorAll('.tlp').forEach((t,i)=>t.classList.toggle('on',i===n));
+  setOrbs(n);
+  // re-trigger reveals inside panel
+  document.querySelectorAll('#p'+n+' .rv2').forEach(el=>{
+    el.classList.remove('vis');void el.offsetWidth;rvObs.observe(el);});
+}
+document.querySelectorAll('.tab').forEach((t,i)=>t.addEventListener('click',()=>goPhase(i)));
+document.querySelectorAll('.tlp').forEach(t=>t.addEventListener('click',()=>{
+  goPhase(parseInt(t.dataset.p));
+  document.querySelector('.twrap').scrollIntoView({behavior:'smooth',block:'start'});
+}));
+
+/* ── SCROLL REVEAL ── */
+const rvObs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');rvObs.unobserve(e.target);}});
+},{threshold:.08});
+document.querySelectorAll('.rv,.rv2').forEach(el=>rvObs.observe(el));
+
+/* ── TILT on hover ── */
+document.addEventListener('mousemove',e=>{
+  document.querySelectorAll('.panel.on .g, #act1 .g, #act2 .g').forEach(card=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    if(x>=-0.5&&x<=0.5&&y>=-0.5&&y<=0.5)
+      card.style.transform=`translateY(-3px) rotateX(${-y*2.5}deg) rotateY(${x*2.5}deg)`;
+    else card.style.transform='';
+  });
+});
+
+/* ── KEYBOARD NAV for phases ── */
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight')goPhase(Math.min(5,cur+1));
+  if(e.key==='ArrowLeft')goPhase(Math.max(0,cur-1));
+  if(e.key>='1'&&e.key<='6')goPhase(parseInt(e.key)-1);
+});
+
+/* ── TOUCH SWIPE (phases only when tabs visible) ── */
+let tx=0;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>60){if(dx<0)goPhase(Math.min(5,cur+1));else goPhase(Math.max(0,cur-1));}
+},{passive:true});
+
+/* INTRO-QUOTE-JS — para ocultar el intro, comenta desde aquí... */
+(function(){const o=document.getElementById('intro-overlay');if(!o)return;const t=setTimeout(dismiss,4500);document.getElementById('intro-skip-btn').addEventListener('click',dismiss);function dismiss(){clearTimeout(t);o.classList.add('hide');setTimeout(()=>{o.style.display='none';},950);}})();
+/* ...hasta aquí para ocultar el intro */
+
+/* INTRO-QUOTE-JS — para ocultar el intro, comenta desde aquí... */
+(function(){const o=document.getElementById('intro-overlay');if(!o)return;document.body.classList.add('intro-active');const t=setTimeout(dismiss,4500);document.getElementById('intro-skip-btn').addEventListener('click',dismiss);function dismiss(){clearTimeout(t);o.classList.add('hide');document.body.classList.remove('intro-active');window.scrollTo({top:0,behavior:'instant'});setTimeout(()=>{o.style.display='none';},950);}})();
+/* ...hasta aquí para ocultar el intro */
+</script>
+</body>
+</html>
