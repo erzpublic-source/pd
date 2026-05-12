@@ -552,6 +552,130 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
 .intro-quote-text {
   font-style: italic;
 }
+
+/* ════
+   ACT 04 — PLAN PILOTO · QUICK WINS
+════ */
+#act4{padding:100px 0;background:linear-gradient(180deg,rgba(8,8,28,1) 0%,rgba(6,6,20,1) 100%);}
+
+/* Pilot intro header */
+.pilot-header{margin-bottom:64px;}
+.pilot-headline{font-family:var(--fp);font-size:clamp(1.5rem,3.5vw,2.8rem);font-weight:800;
+  line-height:1.08;letter-spacing:-.03em;max-width:820px;margin-bottom:20px;}
+.pilot-headline .ph-accent{
+  background:linear-gradient(135deg,var(--c4) 0%,var(--c3) 60%,var(--c2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pilot-sub{font-size:.95rem;color:var(--t3);max-width:600px;line-height:1.72;}
+
+/* Propósito cards */
+.pilot-purpose{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:56px;}
+@media(max-width:900px){.pilot-purpose{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.pilot-purpose{grid-template-columns:1fr;}}
+.pp-card{padding:24px 22px;}
+.pp-icon{font-size:1.5rem;margin-bottom:12px;display:block;}
+.pp-title{font-family:var(--fp);font-size:.9rem;font-weight:700;color:var(--t1);
+  margin-bottom:7px;line-height:1.3;}
+.pp-desc{font-size:.78rem;color:var(--t3);line-height:1.62;}
+
+/* Quick Win phases ribbon */
+.qw-ribbon{display:flex;gap:0;margin-bottom:48px;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.07);}
+@media(max-width:900px){.qw-ribbon{flex-direction:column;}}
+.qw-phase{flex:1;padding:20px 18px;border-right:1px solid rgba(255,255,255,.06);
+  position:relative;transition:background .3s;}
+.qw-phase:last-child{border-right:none;}
+.qw-phase:hover{background:rgba(255,255,255,.04);}
+.qwp-label{font-family:var(--fm);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:6px;}
+.qwp-name{font-family:var(--fp);font-size:.82rem;font-weight:700;margin-bottom:8px;line-height:1.2;}
+.qwp-win{font-size:.74rem;color:var(--t3);line-height:1.55;}
+.qwp-tag{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:100px;
+  font-family:var(--fm);font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+
+/* Checklist mínimo */
+.checklist-section{margin-bottom:48px;}
+.checklist-title{font-family:var(--fp);font-size:clamp(1.1rem,2vw,1.5rem);font-weight:700;
+  letter-spacing:-.02em;margin-bottom:6px;}
+.checklist-sub{font-size:.84rem;color:var(--t3);margin-bottom:24px;}
+
+.checklist-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:760px){.checklist-wrap{grid-template-columns:1fr;}}
+
+.check-card{padding:24px 22px;}
+.check-card-title{font-family:var(--fp);font-size:.88rem;font-weight:700;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.check-card-title span{font-size:1.1rem;}
+.check-items{display:flex;flex-direction:column;gap:6px;}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;border-radius:9px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);
+  font-size:.77rem;color:var(--t2);line-height:1.5;
+  transition:background .2s,border-color .2s,padding-left .2s var(--spring);}
+.ci:hover{background:rgba(255,255,255,.06);padding-left:14px;}
+.ci-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.ci strong{color:var(--t1);display:block;font-size:.76rem;margin-bottom:1px;}
+.ci-req{border-left:2px solid var(--c4);}
+.ci-alt{border-left:2px solid var(--c2);opacity:.85;}
+
+/* PMF Readiness mini-report */
+.pmf-mini{margin-bottom:48px;}
+.pmfm-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px;}
+@media(max-width:960px){.pmfm-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.pmfm-grid{grid-template-columns:1fr;}}
+.pmfm-card{padding:22px 20px;}
+.pmfm-badge{font-family:var(--fm);font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:10px;font-weight:600;}
+.pmfm-title{font-family:var(--fp);font-size:.92rem;font-weight:700;
+  color:var(--t1);margin-bottom:7px;line-height:1.3;}
+.pmfm-desc{font-size:.77rem;color:var(--t3);line-height:1.62;}
+.pmfm-fields{margin-top:12px;display:flex;flex-direction:column;gap:5px;}
+.pmfm-field{display:flex;align-items:center;gap:8px;padding:5px 9px;border-radius:7px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);
+  font-size:.73rem;color:var(--t2);}
+.pmfm-field::before{content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--c4);flex-shrink:0;}
+
+/* SLA strip */
+.sla-strip{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
+.sla-card{flex:1;min-width:160px;padding:18px 20px;text-align:center;}
+.sla-num{font-family:var(--fp);font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--c4),var(--c3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;margin-bottom:4px;}
+.sla-unit{font-family:var(--fm);font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:8px;}
+.sla-label{font-family:var(--fp);font-size:.78rem;font-weight:600;color:var(--t2);
+  line-height:1.4;}
+.sla-note{font-size:.7rem;color:var(--t3);margin-top:4px;}
+
+/* Implementación propuestas */
+.impl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;}
+@media(max-width:860px){.impl-grid{grid-template-columns:1fr;}}
+.impl-card{padding:26px 22px;position:relative;}
+.impl-num{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;margin-bottom:14px;display:inline-block;font-weight:600;}
+.impl-title{font-family:var(--fp);font-size:.95rem;font-weight:700;color:var(--t1);
+  margin-bottom:8px;line-height:1.3;}
+.impl-desc{font-size:.78rem;color:var(--t3);line-height:1.62;margin-bottom:12px;}
+.impl-steps{display:flex;flex-direction:column;gap:4px;}
+.is{display:flex;align-items:flex-start;gap:8px;font-size:.73rem;color:var(--t2);
+  padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.is:last-child{border-bottom:none;}
+.is-n{font-family:var(--fm);font-size:.55rem;width:16px;flex-shrink:0;
+  color:var(--t3);margin-top:1px;}
+
+/* Escalation banner */
+.scale-banner{padding:28px 32px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+  border-left:3px solid var(--c4);margin-top:8px;}
+.sb-icon{font-size:2rem;flex-shrink:0;}
+.sb-body{flex:1;}
+.sb-title{font-family:var(--fp);font-size:clamp(.95rem,1.6vw,1.2rem);font-weight:700;
+  color:var(--t1);margin-bottom:5px;line-height:1.3;}
+.sb-desc{font-size:.82rem;color:var(--t3);line-height:1.6;}
+.sb-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.sb-tag{padding:5px 14px;border-radius:100px;font-family:var(--fp);font-size:.74rem;
+  font-weight:600;background:rgba(255,184,54,.12);border:1px solid rgba(255,184,54,.25);
+  color:var(--c4);transition:transform .2s var(--spring);}
+.sb-tag:hover{transform:translateY(-2px);}
 </style>
 </head>
 <body>
@@ -597,6 +721,7 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
     <a class="nav-act active" href="#act1">01 Problema</a>
     <a class="nav-act" href="#act2">02 Framework</a>
     <a class="nav-act" href="#act3">03 Fases</a>
+    <a class="nav-act" href="#act4">04 Plan Piloto</a>
   </div>
 </nav>
 
@@ -695,7 +820,7 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
       <div class="ps-compare rv">
         <div class="g ps-box old">
           <div class="ps-role">Antes · UX / UI</div>
-          <div class="ps-desc">Investigación de usuario, flujos e interfaz</div>
+          <div class="ps-desc">Investigación de usuario, flujos, interfaz e investigación</div>
         </div>
         <div class="ps-arrow-wrap">
           <div class="ps-arrow">↓</div>
@@ -1067,6 +1192,292 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
   </div>
 </section>
 
+<!-- ════
+     ACT 4 — PLAN PILOTO · QUICK WINS
+════ -->
+<section id="act4">
+  <div class="wrap">
+    <span class="act-label rv">Acto 04 · Plan piloto</span>
+
+    <!-- Header -->
+    <div class="pilot-header rv">
+      <h2 class="pilot-headline">
+        Quick Wins tácticos<br>
+        <span class="ph-accent">alineados al Framework PD</span>
+      </h2>
+      <p class="pilot-sub">Mecanismos estándar y aplicables para que cada entrega de los <span style="color:var(--gold);"> Diseñadores UX en la Dirección del Activo</span>  sea una decisión accionable basada en evidencia — que asegure resolver el problema correcto, maximizar adopción y retención.</p>
+    </div>
+
+    <!-- Propósito -->
+    <div class="pilot-purpose rv">
+      <div class="g pp-card glow-c1" style="border-color:rgba(255,184,54,.18);">
+        <span class="pp-icon">🎯</span>
+        <div class="pp-title" style="color:var(--c4);">Reducir riesgo estratégico</div>
+       <ul>
+          <li> <p class="pp-desc">Implementar el PMF Readiness antes de construir.</li>
+          <li><p class="pp-desc">Cada entregable debe tener: <span style="color:var(--gold);">problema explícito, KPI principal y estimación de impacto/esfuerzo</span>.</p></li>
+        </ul>
+      </div>
+      <div class="g pp-card" style="border-color:rgba(91,143,255,.18);" >
+        <span class="pp-icon">⚡</span>
+        <div class="pp-title" style="color:var(--c1);">Aumentar Activation & Retention</div>
+        <p class="pp-desc">Incrementar la tasa de clientes que alcanzan el Aha! y minimizar fugas tempranas. El diseño conecta directamente con métricas de negocio.</p>
+      </div>
+      <div class="g pp-card" style="border-color:rgba(0,229,204,.18);">
+        <span class="pp-icon">🧠</span>
+        <div class="pp-title" style="color:var(--c0);">Mindset de Product Designer</div>
+        <p class="pp-desc">Desarrollar decisiones basadas en evidencia con entregables utilizables para PM, Data y Dev.</p>
+      </div>
+      <div class="g pp-card" style="border-color:rgba(176,106,255,.18);">
+        <span class="pp-icon">📐</span>
+        <div class="pp-title" style="color:var(--c2);">Estandarizar ritmo</div>
+        <p class="pp-desc">Reducir variabilidad en la calidad de los entregables. SLA operativos claros que aceleren la toma de decisiones estratégicas en el ciclo de vida del producto.</p>
+      </div>
+      <div class="g pp-card" style="border-color:rgba(61,220,151,.18);">
+        <span class="pp-icon">🔬</span>
+        <div class="pp-title" style="color:var(--c5);">Experimentación</div>
+        <ul>
+          <li><p class="pp-desc">Plan de Experimentación, cuando existe mayor oportunidad o claridad para ejecutarlo.</p></li>
+          <li><p class="pp-desc">Cuando la estimación de impacto es compleja de estimar.</p></li>
+        </ul>
+      </div>
+      <div class="g pp-card" style="border-color:rgba(255,111,97,.18);">
+        <span class="pp-icon">📈</span>
+        <div class="pp-title" style="color:var(--c3);">Escalable al CoE</div>
+       <ul>
+        <li><p class="pp-desc">Aprendizaje desde el piloto para replicar el modelo hacia otros frentes del CoE.</p></li>
+        <li><p class="pp-desc">El piloto es la prueba de concepto de un sistema de gestión de valor real.</p></li>
+      </ul> 
+      </div>
+    </div>
+
+    <!-- Quick Wins por fase del framework -->
+    <div class="rv" style="margin-bottom:48px;">
+      <div class="checklist-title">Quick Wins por fase del Framework PD</div>
+      <div class="checklist-sub">Tácticas accionables alineadas a las 6 fases del ciclo de vida del producto</div>
+      <div class="qw-ribbon g" style="border-radius:16px;">
+        <div class="qw-phase">
+          <div class="qwp-label">F1 · Pre-lanzamiento</div>
+          <div class="qwp-name" style="color:var(--c0);">PMF Readiness<br>mini-report</div>
+          <div class="qwp-win">Valida problema + intención antes de construir. KPI principal + estimación de impacto obligatorios.</div>
+          <span class="qwp-tag" style="background:var(--c0d);color:var(--c0);border:1px solid rgba(0,229,204,.3);">Discovery Gate</span>
+        </div>
+        <div class="qw-phase">
+          <div class="qwp-label">F2 · Lanzamiento</div>
+          <div class="qwp-name" style="color:var(--c1);">Aha! Moment<br>Mapping</div>
+          <div class="qwp-win">Define el momento exacto en que el usuario percibe el valor. Métrica de activación acordada con PM.</div>
+          <span class="qwp-tag" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.3);">Activation KPI</span>
+        </div>
+        <div class="qw-phase">
+          <div class="qwp-label">F3 · Post-lanzamiento</div>
+          <div class="qwp-name" style="color:var(--c2);">Retention<br>Risk Scan</div>
+          <div class="qwp-win">Identifica fugas tempranas del funnel. Prioriza frictions críticas con evidencia cuantitativa.</div>
+          <span class="qwp-tag" style="background:var(--c2d);color:var(--c2);border:1px solid rgba(176,106,255,.3);">Churn Detector</span>
+        </div>
+        <div class="qw-phase">
+          <div class="qwp-label">F4 · Crecimiento</div>
+          <div class="qwp-name" style="color:var(--c3);">Growth Loop<br>Canvas</div>
+          <div class="qwp-win">Mapea el loop de valor sostenible. Conecta comportamiento del usuario con métricas de negocio.</div>
+          <span class="qwp-tag" style="background:var(--c3d);color:var(--c3);border:1px solid rgba(255,111,97,.3);">Loop Design</span>
+        </div>
+        <div class="qw-phase">
+          <div class="qwp-label">F5 · Madurez</div>
+          <div class="qwp-name" style="color:var(--c4);">Impact vs Effort<br>Prioritization</div>
+          <div class="qwp-win">Mapeo de iniciativas por impacto estimado y esfuerzo. Decisión de Go / Adjust / Pivot documentada.</div>
+          <span class="qwp-tag" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.3);">Decision Matrix</span>
+        </div>
+        <div class="qw-phase">
+          <div class="qwp-label">F6 · Evolución</div>
+          <div class="qwp-name" style="color:var(--c5);">Renewal Signal<br>Tracker</div>
+          <div class="qwp-win">Detecta señales de obsolescencia desde la madurez. Activa Renewal Loop con hipótesis validadas.</div>
+          <span class="qwp-tag" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.3);">Renewal Loop</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Checklist mínimo -->
+    <div class="checklist-section rv">
+      <div class="checklist-title">Checklist mínimo del entregable</div>
+      <div class="checklist-sub">Todo entregable de Product Design debe incluir estos componentes. Los marcados como Alterno aplican cuando la estimación no es posible.</div>
+      <div class="checklist-wrap">
+        <div class="g check-card">
+          <div class="check-card-title" style="color:var(--c4);"><span>✅</span> Componentes obligatorios</div>
+          <div class="check-items">
+            <div class="ci ci-req">
+              <div class="ci-dot" style="background:var(--c4);"></div>
+              <div><strong>Problema explícito</strong>¿Qué problema estamos resolviendo? ¿Para quién? ¿Qué evidencia lo valida?</div>
+            </div>
+            <div class="ci ci-req">
+              <div class="ci-dot" style="background:var(--c4);"></div>
+              <div><strong>KPI principal</strong>Métrica clara para validar impacto y entrega de valor. Acordada con PM.</div>
+            </div>
+            <div class="ci ci-req">
+              <div class="ci-dot" style="background:var(--c4);"></div>
+              <div><strong>Estimación de impacto</strong>Hipótesis cuantificada del valor esperado vs. el esfuerzo de construcción.</div>
+            </div>
+            <div class="ci ci-req">
+              <div class="ci-dot" style="background:var(--c4);"></div>
+              <div><strong>Criterio de decisión</strong>¿Qué resultado valida continuar, ajustar o pivotar? Definido antes de construir.</div>
+            </div>
+          </div>
+        </div>
+        <div class="g check-card">
+          <div class="check-card-title" style="color:var(--c2);"><span>🔬</span> Alterno: Plan de Experimentación</div>
+          <div class="check-items">
+            <div class="ci ci-alt">
+              <div class="ci-dot" style="background:var(--c2);"></div>
+              <div><strong>Hipótesis de valor</strong>Creemos que [acción] logrará [resultado] para [usuario], medido con [métrica].</div>
+            </div>
+            <div class="ci ci-alt">
+              <div class="ci-dot" style="background:var(--c2);"></div>
+              <div><strong>Experimento mínimo</strong>Prototipo o MVP de menor fidelidad posible para validar la hipótesis antes de construir.</div>
+            </div>
+            <div class="ci ci-alt">
+              <div class="ci-dot" style="background:var(--c2);"></div>
+              <div><strong>Señal de éxito</strong>Umbral mínimo de resultado que justifica inversión completa en el desarrollo.</div>
+            </div>
+            <div class="ci ci-alt">
+              <div class="ci-dot" style="background:var(--c2);"></div>
+              <div><strong>Timeline de validación</strong>Ventana de tiempo acotada. El experimento no puede durar más que el ciclo de sprint.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PMF Readiness mini-report -->
+    <div class="pmf-mini rv">
+      <div class="checklist-title">PMF Readiness mini-report</div>
+      <div class="checklist-sub">Artefacto accionable para la fase Pre-lanzamiento. Reemplaza documentos extensos con decisiones concretas.</div>
+      <div class="pmfm-grid">
+        <div class="g pmfm-card">
+          <span class="pmfm-badge" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.25);">Sección 1 · Problema</span>
+          <div class="pmfm-title">Validación del problema</div>
+          <div class="pmfm-desc">El problema está validado con evidencia real — no con supuestos del equipo o interpretaciones.</div>
+          <div class="pmfm-fields">
+            <div class="pmfm-field">¿Quién tiene el problema? (segmento)</div>
+            <div class="pmfm-field">¿Qué evidencia lo confirma? (data / research)</div>
+            <div class="pmfm-field">¿Cuántos clientes lo experimentan? (escala)</div>
+            <div class="pmfm-field">¿Cuál es el costo actual de no resolverlo?</div>
+          </div>
+        </div>
+        <div class="g pmfm-card">
+          <span class="pmfm-badge" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.25);">Sección 2 · Solución</span>
+          <div class="pmfm-title">Hipótesis de solución</div>
+          <div class="pmfm-desc">La solución propuesta tiene una hipótesis clara de por qué resuelve el problema y genera valor medible.</div>
+          <div class="pmfm-fields">
+            <div class="pmfm-field">¿Qué propone la solución? (síntesis)</div>
+            <div class="pmfm-field">¿Cómo genera valor para el cliente?</div>
+            <div class="pmfm-field">¿Cómo genera valor para el negocio?</div>
+            <div class="pmfm-field">¿Qué riesgo principal tiene esta hipótesis?</div>
+          </div>
+        </div>
+        <div class="g pmfm-card">
+          <span class="pmfm-badge" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.25);">Sección 3 · Decisión</span>
+          <div class="pmfm-title">Criterio de decisión</div>
+          <div class="pmfm-desc">El entregable incluye un criterio claro para saber si vale la pena continuar, ajustar o pivotar.</div>
+          <div class="pmfm-fields">
+            <div class="pmfm-field">KPI principal (métrica de éxito)</div>
+            <div class="pmfm-field">Umbral mínimo de resultado aceptable</div>
+            <div class="pmfm-field">Esfuerzo estimado (T-shirt sizing)</div>
+            <div class="pmfm-field">Recomendación: Go / Ajustar / Pivotar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLA operativos -->
+    <div class="rv" style="margin-bottom:48px;">
+      <div class="checklist-title">SLA operativos sugeridos</div>
+      <div class="checklist-sub">Tiempos de referencia para mantener el ritmo de decisión sin bloquear el flujo del equipo.</div>
+      <div class="sla-strip">
+        <div class="g sla-card">
+          <div class="sla-num">24h</div>
+          <div class="sla-unit">máximo</div>
+          <div class="sla-label">Revisión inicial del entregable por el líder</div>
+          <div class="sla-note">Feedback de primer nivel: ¿tiene los componentes obligatorios?</div>
+        </div>
+        <div class="g sla-card">
+          <div class="sla-num">48h</div>
+          <div class="sla-unit">máximo</div>
+          <div class="sla-label">Alineación con PM sobre criterio de decisión</div>
+          <div class="sla-note">El PM confirma KPI principal y estimación de impacto.</div>
+        </div>
+        <div class="g sla-card">
+          <div class="sla-num">1 a 2</div>
+          <div class="sla-unit">sprint</div>
+          <div class="sla-label">Duración máxima de un experimento de validación</div>
+          <div class="sla-note">El Plan de Experimentación no puede superar el ciclo.</div>
+        </div>
+        <div class="g sla-card">
+          <div class="sla-num">2×</div>
+          <div class="sla-unit">por mes</div>
+          <div class="sla-label">Revisión de métricas con el chapter</div>
+          <div class="sla-note">Sesión de aprendizaje colectivo: ¿qué funcionó? ¿qué no?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implementación propuesta -->
+    <div class="rv" style="margin-bottom:48px;">
+      <div class="checklist-title">Implementación propuesta</div>
+      <div class="checklist-sub">Tres rutas de implementación según el nivel de madurez actual del equipo y la iniciativa.</div>
+      <div class="impl-grid">
+        <div class="g impl-card">
+          <span class="impl-num" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.25);">Ruta 01 · Quick Start</span>
+          <div class="impl-title">Adopción inmediata</div>
+          <div class="impl-desc">Para iniciativas activas que no tienen checklist ni KPI definido. Implementación en el próximo entregable.</div>
+          <div class="impl-steps">
+            <div class="is"><span class="is-n">1.</span>Definir problema explícito en el brief de la iniciativa actual</div>
+            <div class="is"><span class="is-n">2.</span>Acordar KPI principal con PM antes de continuar diseñando</div>
+            <div class="is"><span class="is-n">3.</span>Agregar criterio de decisión Go/Adjust/Pivot al entregable</div>
+            <div class="is"><span class="is-n">4.</span>Revisar en la siguiente sesión de chapter ¿qué aprendimos?</div>
+          </div>
+        </div>
+        <div class="g impl-card">
+          <span class="impl-num" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.25);">Ruta 02 · Piloto Formal</span>
+          <div class="impl-title">1 iniciativa como caso de estudio</div>
+          <div class="impl-desc">Seleccionar una iniciativa nueva para aplicar el framework completo desde Discovery hasta métricas de retención.</div>
+          <div class="impl-steps">
+            <div class="is"><span class="is-n">1.</span>Seleccionar iniciativa con PM alineado y data disponible</div>
+            <div class="is"><span class="is-n">2.</span>Aplicar PMF Readiness mini-report y check list</div>
+            <div class="is"><span class="is-n">4.</span>Documentar aprendizajes para escalar al CoE</div>
+          </div>
+        </div>
+        <div class="g impl-card">
+          <span class="impl-num" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.25);">Ruta 03 · Escala al CoE</span>
+          <div class="impl-title">Expansión sistémica</div>
+          <div class="impl-desc">Convertir los aprendizajes del piloto en el estándar operativo de todo el CoE de Diseño del banco.</div>
+          <div class="impl-steps">
+            <div class="is"><span class="is-n">1.</span>Consolidar 2-3 casos piloto documentados con resultados</div>
+            <div class="is"><span class="is-n">2.</span>Refinar System prompts con estándar para el CoE de acuerdo al Framework</div>
+            <div class="is"><span class="is-n">3.</span>Sesión de habilitación con todos los Diseñadores UX</div>
+            <div class="is"><span class="is-n">4.</span>Integrar los SLA al proceso de revisión de líderes</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escalation banner -->
+    <div class="rv">
+      <div class="g scale-banner glow-c1">
+        <div class="sb-icon">🚀</div>
+        <div class="sb-body">
+          <div class="sb-title">El piloto no es un proyecto separado — es el catalizador del cambio sistémico</div>
+          <div class="sb-desc">Cada Quick Win aplicado en una iniciativa real genera evidencia de que el framework funciona. <span style="color:var(--c0);">El objetivo no es implementar herramientas: es cambiar cómo los Diseñadores UX toman decisiones informadas y cómo los líderes las acompañan en pro de su evolución al rol de Product Designer.</span></div>
+          <div class="sb-tags">
+            <span class="sb-tag">Mindset de evidencia</span>
+            <span class="sb-tag">Entregables accionables</span>
+            <span class="sb-tag">Ritmo sostenible</span>
+            <span class="sb-tag">Escalable al CoE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <div class="wrap">
   <footer>
     <span class="fbrand" style="font-family:var(--fp);">Framework Product Designer · Banco de Bogotá</span>
@@ -1091,7 +1502,7 @@ window.addEventListener('scroll',()=>{
 },{ passive:true });
 
 /* ── NAV ACTIVE ── */
-const acts=['act1','act2','act3'];
+const acts=['act1','act2','act3','act4'];
 const navLinks=document.querySelectorAll('.nav-act');
 const io=new IntersectionObserver(es=>{
   es.forEach(e=>{
