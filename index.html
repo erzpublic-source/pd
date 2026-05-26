@@ -48,6 +48,9 @@
 
   --spring: cubic-bezier(.34,1.56,.64,1);
   --out:    cubic-bezier(.22,1,.36,1);
+
+  /* Font Scale */
+  --font-scale: 1;
 }
 
 html{scroll-behavior:smooth;font-size:16px;}
@@ -63,7 +66,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:998;
   background-size:120px;}
 
 /* cursor */
-#cdot,#cring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9999;
+#cdot,#cring{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:99999;
   transform:translate(-50%,-50%);transition:none;}
 #cdot{width:7px;height:7px;background:var(--c0);box-shadow:0 0 10px var(--c0);
   transition:background .5s,box-shadow .5s,width .2s var(--spring),height .2s var(--spring);}
@@ -199,14 +202,16 @@ nav#topnav{position:fixed;top:0;left:0;right:0;z-index:300;
 
 /* Lead statement */
 .lead-statement{padding:0 48px; padding-bottom: 48px; border-bottom:1px solid rgba(255,255,255,.06);}
-.ls-quote{font-family:var(--fp);font-size:clamp(1.5rem,3.5vw,2.8rem);font-weight:700;
-  line-height:1.1;letter-spacing:-.02em;max-width:900px;
-  color:var(--t2);margin-bottom:24px;}
+.outcomes-block{padding-left:20px;border-left:2px solid rgba(255,77,77,.25);}
+
+.ls-quote{font-family:var(--fp);font-size:clamp(1.3rem,2.8vw,2.2rem);font-weight:700;
+  line-height:1.15;letter-spacing:-.02em;max-width:720px;
+  color:var(--t2);margin-bottom:16px;}
 .ls-quote .hl-red{color:var(--red);}
 .ls-quote .hl-w{color:var(--t1);}
 
-.lead-shift{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:28px;}
-.ls-from,.ls-to{padding:14px 22px;border-radius:12px;}
+.lead-shift{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:20px;max-width:720px;}
+.ls-from,.ls-to{padding:12px 20px;border-radius:12px;flex:1;min-width:200px;}
 .ls-from{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.18);}
 .ls-from .ls-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--red);margin-bottom:5px;}
@@ -242,6 +247,210 @@ nav#topnav{position:fixed;top:0;left:0;right:0;z-index:300;
 .pd-banner-text{font-family:var(--fp);font-size:clamp(1rem,1.6vw,1.2rem);
   font-weight:600;color:var(--t1);line-height:1.4;}
 .pd-banner-text em{font-style:normal;color:var(--c0);}
+
+/* ════
+   ACT 1 — INSIGHT CARDS + MODALS
+════ */
+.insight-section{padding:0;}
+.insight-section-label{font-family:var(--fm);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.insight-section-label::before{content:'';width:20px;height:1px;background:var(--red);opacity:.6;}
+
+.insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:0;}
+@media(max-width:900px){.insight-grid{grid-template-columns:1fr;}}
+
+.insight-card{padding:28px 24px;cursor:pointer;position:relative;overflow:hidden;
+  border-color:rgba(255,77,77,.15);transition:transform .32s var(--spring),box-shadow .32s,border-color .3s;}
+.insight-card::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,77,77,.06) 0%,transparent 60%);
+  pointer-events:none;transition:opacity .3s;}
+.insight-card:hover{border-color:rgba(255,77,77,.35);
+  box-shadow:0 12px 48px rgba(0,0,0,.42),0 0 28px rgba(255,77,77,.12);}
+.insight-card:hover::after{opacity:0;}
+
+.ic-tag{font-family:var(--fm);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;display:inline-block;margin-bottom:16px;font-weight:500;
+  background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.22);color:var(--red);}
+.ic-num{font-family:var(--fm);font-size:.55rem;letter-spacing:.1em;color:rgba(255,77,77,.45);
+  margin-bottom:8px;display:block;}
+.ic-title{font-family:var(--fp);font-size:1.0rem;font-weight:700;color:var(--t1);
+  line-height:1.3;margin-bottom:10px;}
+.ic-excerpt{font-size:.78rem;color:var(--t3);line-height:1.65;margin-bottom:18px;}
+.ic-cta{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.55rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--red);opacity:.7;
+  transition:opacity .2s,gap .2s var(--spring);}
+.insight-card:hover .ic-cta{opacity:1;gap:10px;}
+.ic-icon{font-size:1.6rem;margin-bottom:14px;display:block;}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;pointer-events:none;transition:opacity .35s var(--out);}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-backdrop{position:absolute;inset:0;background:rgba(4,4,18,.88);backdrop-filter:blur(18px);}
+.modal-box{position:relative;z-index:1;max-width:680px;width:100%;max-height:85vh;
+  overflow-y:auto;border-radius:24px;padding:0;
+  background:rgba(10,10,32,.95);border:1px solid rgba(255,77,77,.18);
+  box-shadow:0 32px 96px rgba(0,0,0,.7),0 0 60px rgba(255,77,77,.08);
+  transform:translateY(28px) scale(.97);transition:transform .4s var(--spring);
+  scrollbar-width:thin;scrollbar-color:rgba(255,77,77,.2) transparent;}
+.modal-box::-webkit-scrollbar{width:4px;}
+.modal-box::-webkit-scrollbar-thumb{background:rgba(255,77,77,.2);border-radius:4px;}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1);}
+
+.modal-header{padding:28px 32px 20px;border-bottom:1px solid rgba(255,255,255,.07);
+  position:sticky;top:0;background:rgba(10,10,32,.97);backdrop-filter:blur(12px);
+  border-radius:24px 24px 0 0;}
+.modal-tag{font-family:var(--fm);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 10px;border-radius:100px;display:inline-block;margin-bottom:12px;
+  background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.22);color:var(--red);}
+.modal-title{font-family:var(--fp);font-size:clamp(1.2rem,2.5vw,1.7rem);font-weight:800;
+  color:var(--t1);line-height:1.15;letter-spacing:-.02em;margin-bottom:0;}
+.modal-close{position:absolute;top:22px;right:22px;width:36px;height:36px;
+  border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);
+  color:var(--t3);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:all .2s var(--spring);}
+.modal-close:hover{background:rgba(255,77,77,.15);border-color:rgba(255,77,77,.3);color:var(--red);}
+
+.modal-body{padding:28px 32px 36px;}
+.modal-para{font-size:.875rem;color:var(--t3);line-height:1.78;margin-bottom:20px;}
+.modal-para:last-child{margin-bottom:0;}
+.modal-para strong{color:var(--t1);font-weight:600;}
+.modal-para .hl-red{color:var(--red);font-weight:600;}
+.modal-highlight{padding:16px 20px;border-radius:12px;margin:24px 0;
+  background:rgba(255,77,77,.07);border-left:3px solid var(--red);}
+.modal-highlight p{font-family:var(--fp);font-size:.9rem;font-weight:600;color:var(--t2);
+  line-height:1.5;margin:0;}
+
+.pc-cta{display:inline-flex;align-items:center;gap:6px;font-family:var(--fm);font-size:.52rem;
+  letter-spacing:.1em;text-transform:uppercase;margin-top:14px;opacity:.6;
+  transition:opacity .2s,gap .2s var(--spring);}
+
+/* Cycle bridge */
+
+/* ── Phase tension chip + modal ── */
+.tension-chip{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  padding:8px 14px;border-radius:10px;cursor:pointer;width:auto;
+  font-family:var(--fm);font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  border:1px solid var(--pc-b,rgba(255,255,255,.12));
+  background:var(--pd,rgba(255,255,255,.04));
+  color:var(--pc,var(--t2));
+  transition:all .25s var(--spring);}
+.tension-chip:hover{filter:brightness(1.2);gap:12px;}
+.tension-chip svg{opacity:.6;flex-shrink:0;transition:opacity .2s,transform .2s var(--spring);}
+.tension-chip:hover svg{opacity:1;transform:translateX(3px);}
+.tension-chip-label{flex:none;}
+
+.tmodal-row{display:grid;grid-template-columns:1fr;gap:12px;margin-top:4px;}
+.tmodal-block{padding:16px 18px;border-radius:14px;}
+.tmodal-block.tb-red{background:rgba(255,77,77,.06);border:1px solid rgba(255,77,77,.18);}
+.tmodal-block.tb-blue{background:rgba(91,143,255,.06);border:1px solid rgba(91,143,255,.18);}
+.tmodal-block.tb-green{background:rgba(61,220,151,.06);border:1px solid rgba(61,220,151,.18);}
+.tb-label{font-family:var(--fm);font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;
+  font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+.tb-label.rl{color:var(--red);}
+.tb-label.bl{color:var(--c1);}
+.tb-label.gl{color:var(--c5);}
+.tb-q{font-family:var(--fp);font-size:.82rem;font-weight:700;color:var(--t1);
+  line-height:1.3;margin-bottom:5px;}
+.tb-desc{font-size:.75rem;color:var(--t3);line-height:1.65;}
+
+.cycle-bridge{margin:40px 0 0;}
+.cb-inner{padding:24px 28px;display:flex;align-items:center;justify-content:space-between;
+  gap:24px;border-color:rgba(255,255,255,.1);flex-wrap:wrap;}
+.cb-label{font-family:var(--fm);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--t3);display:block;margin-bottom:8px;}
+.cb-text{font-size:.82rem;color:var(--t3);line-height:1.7;max-width:580px;}
+.cb-text strong{color:var(--t2);}
+.cb-cta{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--red);border:1px solid rgba(255,77,77,.25);padding:10px 20px;border-radius:100px;
+  text-decoration:none;transition:all .25s var(--spring);}
+.cb-cta:hover{background:rgba(255,77,77,.08);border-color:rgba(255,77,77,.5);gap:14px;}
+
+.promise-clickable{cursor:pointer;}
+.promise-clickable:hover .pc-cta{opacity:1;gap:10px;}
+.promise-clickable:hover{transform:translateY(-5px);}
+
+/* Modal accent variants */
+.modal-box.accent-c0{border-color:rgba(0,229,204,.22);box-shadow:0 32px 96px rgba(0,0,0,.7),0 0 60px rgba(0,229,204,.08);}
+.modal-box.accent-c1{border-color:rgba(91,143,255,.22);box-shadow:0 32px 96px rgba(0,0,0,.7),0 0 60px rgba(91,143,255,.08);}
+.modal-box.accent-c5{border-color:rgba(61,220,151,.22);box-shadow:0 32px 96px rgba(0,0,0,.7),0 0 60px rgba(61,220,151,.08);}
+.modal-tag.c0{background:rgba(0,229,204,.1);border:1px solid rgba(0,229,204,.25);color:var(--c0);}
+.modal-tag.c1{background:rgba(91,143,255,.1);border:1px solid rgba(91,143,255,.25);color:var(--c1);}
+.modal-tag.c5{background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.25);color:var(--c5);}
+.modal-close.c0:hover{background:rgba(0,229,204,.15);border-color:rgba(0,229,204,.3);color:var(--c0);}
+.modal-close.c1:hover{background:rgba(91,143,255,.15);border-color:rgba(91,143,255,.3);color:var(--c1);}
+.modal-close.c5:hover{background:rgba(61,220,151,.15);border-color:rgba(61,220,151,.3);color:var(--c5);}
+.modal-highlight.c0{background:rgba(0,229,204,.07);border-left-color:var(--c0);}
+.modal-highlight.c1{background:rgba(91,143,255,.07);border-left-color:var(--c1);}
+.modal-highlight.c5{background:rgba(61,220,151,.07);border-left-color:var(--c5);}
+.modal-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;}
+.modal-chip{padding:5px 14px;border-radius:100px;font-family:var(--fm);font-size:.55rem;
+  letter-spacing:.1em;text-transform:uppercase;font-weight:600;}
+.modal-chip.c0{background:rgba(0,229,204,.1);border:1px solid rgba(0,229,204,.22);color:var(--c0);}
+.modal-chip.c1{background:rgba(91,143,255,.1);border:1px solid rgba(91,143,255,.22);color:var(--c1);}
+.modal-chip.c5{background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.22);color:var(--c5);}
+
+
+/* ════
+   INTERSTICIAL — DECISION FLOW
+════ */
+#decision-flow{padding:80px 0;position:relative;overflow:hidden;}
+#decision-flow::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 0%,rgba(255,77,77,.03) 50%,transparent 100%);
+  pointer-events:none;}
+
+.df-label{font-family:var(--fm);font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--t3);text-align:center;margin-bottom:12px;display:flex;align-items:center;
+  justify-content:center;gap:12px;}
+.df-label::before,.df-label::after{content:'';width:32px;height:1px;background:rgba(255,255,255,.1);}
+.df-headline{font-family:var(--fp);font-size:clamp(1.1rem,2vw,1.55rem);font-weight:800;
+  text-align:center;color:var(--t1);letter-spacing:-.02em;margin-bottom:6px;}
+.df-sub{font-size:.8rem;color:var(--t3);text-align:center;margin-bottom:52px;line-height:1.6;}
+
+.df-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  align-items:start;gap:0;max-width:1080px;margin:0 auto;}
+@media(max-width:900px){
+  .df-flow{grid-template-columns:1fr;gap:0;}
+  .df-connector{transform:rotate(90deg);margin:4px auto;}
+}
+
+.df-node{padding:24px 20px 22px;border-radius:20px;position:relative;
+  cursor:default;transition:transform .3s var(--spring),box-shadow .3s;}
+.df-node:hover{transform:translateY(-6px);}
+
+.df-node-num{font-family:var(--fm);font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;
+  margin-bottom:10px;display:block;opacity:.6;}
+.df-node-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;
+  font-family:var(--fm);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;
+  margin-bottom:14px;}
+.df-node-question{font-family:var(--fp);font-size:.95rem;font-weight:700;color:var(--t1);
+  line-height:1.35;margin-bottom:10px;}
+.df-node-concept{font-size:.72rem;color:var(--t3);line-height:1.6;}
+
+/* node color tokens */
+.df-n0{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);}
+.df-n0 .df-node-num{color:rgba(255,255,255,.35);}
+.df-n0 .df-node-badge{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);}
+.df-n0:hover{box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 24px rgba(255,255,255,.05);}
+
+.df-n1{border:1px solid rgba(255,77,77,.2);background:rgba(255,77,77,.05);}
+.df-n1 .df-node-num{color:rgba(255,77,77,.4);}
+.df-n1 .df-node-badge{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.25);color:var(--red);}
+.df-n1:hover{box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 24px rgba(255,77,77,.1);}
+
+.df-n2{border:1px solid rgba(91,143,255,.2);background:rgba(91,143,255,.05);}
+.df-n2 .df-node-num{color:rgba(91,143,255,.4);}
+.df-n2 .df-node-badge{background:rgba(91,143,255,.1);border:1px solid rgba(91,143,255,.25);color:var(--c1);}
+.df-n2:hover{box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 24px rgba(91,143,255,.1);}
+
+.df-n3{border:1px solid rgba(61,220,151,.2);background:rgba(61,220,151,.05);}
+.df-n3 .df-node-num{color:rgba(61,220,151,.4);}
+.df-n3 .df-node-badge{background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.25);color:var(--c5);}
+.df-n3:hover{box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 24px rgba(61,220,151,.1);}
+
+.df-connector{display:flex;align-items:center;justify-content:center;padding:0 8px;margin-top:40px;}
+.df-connector svg{opacity:.3;}
 
 /* ════
    ACT 2 — EL FRAMEWORK
@@ -519,7 +728,7 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
 .intro-quote-role{color:var(--t3);}
 
 .intro-skip{
-  position:absolute;bottom:36px;right:40px;
+  position:relative;margin-top:36px;display:inline-block;
   font-family:var(--fm);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--t3);cursor:none;padding:8px 16px;border-radius:8px;
   border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);
@@ -676,6 +885,30 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
   font-weight:600;background:rgba(255,184,54,.12);border:1px solid rgba(255,184,54,.25);
   color:var(--c4);transition:transform .2s var(--spring);}
 .sb-tag:hover{transform:translateY(-2px);}
+
+/* Botón terciario para Hero Plan Piloto */
+.btn-tertiary{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:12px;
+  font-family:var(--fp);
+  font-weight:600;
+  font-size:.9rem;
+  color:var(--gold);
+  background:transparent;
+  border:1px solid rgba(255,184,54,.18);
+  box-shadow:inset 0 0 0 1px rgba(255,184,54,.02);
+  text-decoration:none;
+  transition:all .22s var(--out);
+}
+.btn-tertiary:hover{
+  background:rgba(255,184,54,.08);
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(255,184,54,.07);
+}
+
 </style>
 </head>
 <body>
@@ -698,8 +931,9 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
       <span class="intro-quote-name">Richard Branson</span>
       <span class="intro-quote-role">· Fundador y presidente del conglomerado Virgin Group</span>
     </div>
+    <button class="intro-skip" id="intro-skip-btn">Continuar →</button>
   </div>
-  <button class="intro-skip" id="intro-skip-btn">Continuar →</button>
+  
 </div>
 <!-- INTRO-QUOTE-END -->
 
@@ -720,6 +954,7 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
   <div class="nav-acts">
     <a class="nav-act active" href="#act1">01 Problema</a>
     <a class="nav-act" href="#act2">02 Framework</a>
+    <a class="nav-act" href="#decision-flow">↳ Decision Flow</a>
     <a class="nav-act" href="#act3">03 Fases</a>
     <a class="nav-act" href="#act4">04 Plan Piloto</a>
   </div>
@@ -784,28 +1019,102 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
 
     </div>
 
-    <div class="rv">
-      <div class="ls-quote">
-        Hoy estamos midiendo éxito de diseño con
-        <span class="hl-red">outputs</span>, no con
-        <span class="hl-w">outcomes</span>
-      </div>
-      <p style="font-size:.92rem;color:var(--t3);margin-bottom:24px;">Como líderes, tenemos una responsabilidad concreta frente a este cambio:</p>
-      <div class="lead-shift">
-        <div class="ls-from g">
-          <div class="ls-label">Hoy gestionamos</div>
-          <div class="ls-val">Entregables y acompañamiento de outputs</div>
+    <!-- ── INSIGHT CARDS ── -->
+    <div class="insight-section rv" style="margin-top:0;">
+      <div class="insight-section-label">Tres tensiones estructurales del problema</div>
+      <div class="insight-grid">
+
+        <!-- Card 1 -->
+        <div class="g insight-card rv" onclick="openModal('modal-tradeoffs')" style="transition-delay:.05s;">
+          <span class="ic-num">01</span>
+          <span class="ic-icon">⚖️</span>
+          <div class="ic-tag">Trade-offs</div>
+          <div class="ic-title">Las renuncias que nadie declara</div>
+          <p class="ic-excerpt">Se prioriza velocidad, alcance comercial o roadmap — pero no siempre se declara qué se sacrifica en experiencia, evidencia o deuda UX/UI.</p>
+          <span class="ic-cta">Leer más →</span>
         </div>
-        <div class="shift-arrow">→</div>
-        <div class="ls-to g">
-          <div class="ls-label">El cambio que necesitamos</div>
-          <div class="ls-val">Gestionar y acompañar impacto real</div>
+
+        <!-- Card 2 -->
+        <div class="g insight-card rv" onclick="openModal('modal-ttm')" style="transition-delay:.12s;">
+          <span class="ic-num">02</span>
+          <span class="ic-icon">⏱️</span>
+          <div class="ic-tag">Time to Market</div>
+          <div class="ic-title">Cuando el deadline domina</div>
+          <p class="ic-excerpt">La presión por llegar rápido al mercado lleva a diseñar con baja validación. Diseño responde al deadline, no necesariamente al problema correcto.</p>
+          <span class="ic-cta">Leer más →</span>
         </div>
+
+        <!-- Card 3 -->
+        <div class="g insight-card rv" onclick="openModal('modal-adoption')" style="transition-delay:.2s;">
+          <span class="ic-num">03</span>
+          <span class="ic-icon">🏦</span>
+          <div class="ic-tag">Go-to-Market</div>
+          <div class="ic-title">Producción no es adopción</div>
+          <p class="ic-excerpt">Salir a producción no equivale a lograr adopción. Una solución puede estar construida y fallar si no tiene claridad de segmento, canal ni medición inicial.</p>
+          <span class="ic-cta">Leer más →</span>
+        </div>
+
       </div>
     </div>
 
   </div>
 </section>
+
+<!-- ════ MODALS ════ -->
+
+<!-- Modal 1: Trade-offs -->
+<div class="modal-overlay" id="modal-tradeoffs" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-tag">Trade-offs implícitos</div>
+      <div class="modal-title">Las renuncias que nadie declara</div>
+      <button class="modal-close" onclick="closeModal('modal-tradeoffs')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-para">Hoy muchas decisiones de producto implican renuncias: se prioriza <strong>velocidad</strong>, <strong>alcance comercial</strong> o <strong>cumplimiento de roadmap</strong>, pero no siempre se declara qué se sacrifica en experiencia, evidencia, comprensión del usuario o deuda UX/UI.</p>
+      <div class="modal-highlight"><p>El problema no es que existan trade-offs. El problema es que muchas veces quedan <span class="hl-red">implícitos</span>.</p></div>
+      <p class="modal-para">Cuando las renuncias no se nombran, se vuelven invisibles para el equipo y para la organización. No se registran, no se miden, no se liquidan. La deuda se acumula silenciosamente hasta que la experiencia falla — o el producto no logra adopción.</p>
+      <p class="modal-para">El rol del Product Designer en este punto es <strong>hacer visibles esas renuncias</strong>: nombrarlas en los espacios de decisión, cuantificarlas cuando sea posible y proponer estrategias para reducir la deuda UX/UI generada.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Time to Market -->
+<div class="modal-overlay" id="modal-ttm" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-tag">Time to Market</div>
+      <div class="modal-title">Cuando el deadline domina sin evidencia</div>
+      <button class="modal-close" onclick="closeModal('modal-ttm')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-para">La presión por llegar rápido al mercado puede llevar a diseñar soluciones con <strong>baja validación</strong>, <strong>métricas débiles</strong> o <strong>experiencia incompleta</strong>.</p>
+      <div class="modal-highlight"><p>Cuando el <span class="hl-red">Time to Market</span> domina sin evidencia, diseño termina respondiendo al deadline — y no necesariamente al problema correcto.</p></div>
+      <p class="modal-para">Este es uno de los patrones más costosos del ciclo de producto: se construye rápido, se lanza, y luego se descubre que la hipótesis de valor era incorrecta. El costo de corrección post-lanzamiento es múltiples veces mayor al costo de validar antes.</p>
+      <p class="modal-para">El framework propone que la velocidad y la validación <strong>no son opuestos</strong>. Existe un camino de mínima validación viable — entrevistas, smoke tests, prototipos — que reduce el riesgo sin necesariamente ralentizar el delivery.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3: Adopción -->
+<div class="modal-overlay" id="modal-adoption" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-tag">Go-to-Market</div>
+      <div class="modal-title">Salir a producción no equivale a lograr adopción</div>
+      <button class="modal-close" onclick="closeModal('modal-adoption')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-para">En el contexto del banco, salir a producción <strong>no equivale a lograr adopción</strong>. Una solución puede estar diseñada y construida, pero fallar si no tiene claridad en:</p>
+      <div class="modal-highlight"><p>Segmento · Canal · Momento del journey · Mensaje de valor · Dependencias operativas · <span class="hl-red">Medición inicial</span></p></div>
+      <p class="modal-para">El lanzamiento es solo una condición necesaria, no suficiente. La adopción requiere que el cliente correcto encuentre el producto correcto, en el canal correcto, en el momento correcto del journey — con un mensaje que comunique el valor de forma comprensible y relevante.</p>
+      <p class="modal-para">Cuando alguna de estas variables falla, el producto existe pero no crece. Los equipos asumen que el problema es de producto, cuando muchas veces el problema es de <strong>activación</strong> o de <strong>comunicación de valor</strong>. El Product Designer es un actor clave en diagnosticar cuál de esas dimensiones está fallando — y en proponer hipótesis de mejora basadas en evidencia.</p>
+    </div>
+  </div>
+</div>
 
 <!-- ════
      ACT 2 — EL FRAMEWORK
@@ -835,54 +1144,23 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
 
     <!-- 3 Promises -->
     <div class="promise-grid">
-      <div class="g promise-card rv" style="--pc:var(--c0);--pd:var(--c0d);">
+      <div class="g promise-card rv promise-clickable" onclick="openModal('modal-tradeoff-fw')" style="--pc:var(--c0);--pd:var(--c0d);">
         <span class="pc-num" style="background:var(--c0d);color:var(--c0);border:1px solid var(--c0b);">01</span>
         <div class="pc-title" style="color:var(--c0);">Actor estratégico</div>
-        <p class="pc-desc">El framework apoya al Product Designer como conector entre problema, negocio y experiencia a lo largo de todo el ciclo de vida del producto.</p>
+        <p class="pc-desc">El PD hace visibles las tensiones de decisión: valor cliente vs valor negocio, velocidad vs evidencia, alcance vs calidad. Su aporte no es eliminar el trade-off, sino declararlo, medirlo y gestionarlo.</p>
+        <span class="pc-cta" style="color:var(--c0);">Trade-off · Ver más →</span>
       </div>
-      <div class="g promise-card rv" style="--pc:var(--c1);--pd:var(--c1d);transition-delay:.1s;">
+      <div class="g promise-card rv promise-clickable" onclick="openModal('modal-ttm-fw')" style="--pc:var(--c1);--pd:var(--c1d);transition-delay:.1s;">
         <span class="pc-num" style="background:var(--c1d);color:var(--c1);border:1px solid var(--c1b);">02</span>
         <div class="pc-title" style="color:var(--c1);">Decisiones con evidencia</div>
-        <p class="pc-desc">Busca reducir riesgo, validar decisiones y asegurar Product-Market Fit con evidencia real — no con intuición o entregables.</p>
+        <p class="pc-desc">Product-Market Fit no es un resultado del lanzamiento — es una condición que se construye antes de salir. Cada decisión debe tener problema claro, hipótesis explícita y métrica de validación definida.</p>
+        <span class="pc-cta" style="color:var(--c1);">PMF + Time to Market · Ver más →</span>
       </div>
-      <div class="g promise-card rv" style="--pc:var(--c5);--pd:var(--c5d);transition-delay:.2s;">
+      <div class="g promise-card rv promise-clickable" onclick="openModal('modal-gtm-fw')" style="--pc:var(--c5);--pd:var(--c5d);transition-delay:.2s;">
         <span class="pc-num" style="background:var(--c5d);color:var(--c5);border:1px solid var(--c5b);">03</span>
         <div class="pc-title" style="color:var(--c5);">Sistema de valor</div>
-        <p class="pc-desc">El diseño deja de ser ejecución y pasa a ser un sistema de gestión de adopción y valor sostenible para el negocio y el cliente.</p>
-      </div>
-    </div>
-
-    <!-- Cycle macro -->
-    <div class="cycle-wrap rv">
-      <h3 class="cycle-title" style="font-family:var(--fp);">Validación continua del Ciclo de Vida del Producto</h3>
-      <div class="cycle-nodes">
-        <div class="g cycle-node" style="border-color:rgba(0,229,204,.22);background:rgba(0,229,204,.07);">
-          <span class="cn-emoji">🔍</span>
-          <div class="cn-name" style="color:var(--c0);">Discovery / PMF</div>
-          <div class="cn-subs">Validar Problema · Validar Intención</div>
-          <span class="cn-q" style="background:var(--c0d);color:var(--c0);">¿Merece ser resuelto?</span>
-        </div>
-        <div class="cn-arrow">→</div>
-        <div class="g cycle-node" style="border-color:rgba(91,143,255,.22);background:rgba(91,143,255,.07);">
-          <span class="cn-emoji">⚡</span>
-          <div class="cn-name" style="color:var(--c1);">MVP / Activación</div>
-          <div class="cn-subs">Aha! Moment · Tiempo al Valor (TTV)</div>
-          <span class="cn-q" style="background:var(--c1d);color:var(--c1);">¿Siente el valor?</span>
-        </div>
-        <div class="cn-arrow">→</div>
-        <div class="g cycle-node" style="border-color:rgba(61,220,151,.22);background:rgba(61,220,151,.07);">
-          <span class="cn-emoji">📈</span>
-          <div class="cn-name" style="color:var(--c5);">Escala / Retención</div>
-          <div class="cn-subs">Hábito & Feedback · Innovación Evolutiva</div>
-          <span class="cn-q" style="background:var(--c5d);color:var(--c5);">¿Vuelve por valor?</span>
-        </div>
-      </div>
-      <div class="renewal-loop rv">
-        <span class="rl-arrow">↩</span>
-        <span class="rl-icon">♻️</span>
-        <span class="rl-text">Re-evolución · Renewal Loop · Validación continua</span>
-        <span class="rl-icon">♻️</span>
-        <span class="rl-arrow">↩</span>
+        <p class="pc-desc">GTM conecta la solución con la forma real en que el banco activa valor: segmento, canal, journey, mensaje, operación, data y medición. Desde Product Design, conecta a negocio y marketing con experiencia y evidencia.</p>
+        <span class="pc-cta" style="color:var(--c5);">Go-to-Market · Ver más →</span>
       </div>
     </div>
 
@@ -891,87 +1169,107 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
       <div class="pd-banner-text">El Product Designer es responsable de <em>conectar evidencia con decisiones</em> para lograr Product-Market Fit.</div>
     </div>
 
-    <!-- PMF Readiness Report — standalone después del ciclo de vida -->
-    <div id="pmf-report-section">
-      <div class="pmf-report rv" style="margin-top:64px;">
-        <div class="g" style="padding:24px 26px;border-color:rgba(0,229,204,.2);">
-          <div class="pmf-report-title" style="font-family:var(--fp);">PMF Readiness Report</div>
-          <div class="pmf-report-sub">Evaluación preliminar antes de inversión significativa. El PD acompaña y facilita a PM y Negocio en el marco de evaluación.</div>
-          <div class="pmf-criteria">
-            <div class="g crit-card" style="--pc:var(--c0);">
-              <span class="crit-num" style="background:var(--c0d);color:var(--c0);border:1px solid rgba(0,229,204,.2);">01</span>
-              <div class="crit-title" style="font-family:var(--fp);">Problema Correcto</div>
-              <ul class="crit-items">
-                <li>Problem Statement validado</li>
-                <li>Jobs to be Done</li>
-                <li>Evidencia cualitativa + cuantitativa</li>
-              </ul>
-              <div class="crit-check">✓ Recurrente y relevante, no anecdótico</div>
-            </div>
-            <div class="g crit-card" style="--pc:var(--c1);">
-              <span class="crit-num" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.2);">02</span>
-              <div class="crit-title" style="font-family:var(--fp);">Tamaño de Oportunidad (Segmento y Riesgo)</div>
-              <ul class="crit-items">
-                <li>Opportunity Assessment</li>
-                <li>Análisis de mercado</li>
-                <li>Competidores y sustitutos</li>
-              </ul>
-              <div class="crit-check" style="background:rgba(91,143,255,.08);color:var(--c1);">✓ Mercado suficiente o impacto estratégico claro</div>
-            </div>
-            <div class="g crit-card" style="--pc:var(--c2);">
-              <span class="crit-num" style="background:var(--c2d);color:var(--c2);border:1px solid rgba(176,106,255,.2);">03</span>
-              <div class="crit-title" style="font-family:var(--fp);">Encaje Propuesta–Usuario</div>
-              <ul class="crit-items">
-                <li>Value Proposition Canvas</li>
-                <li>Concept testing</li>
-                <li>Fake door / Smoke test</li>
-              </ul>
-              <div class="crit-check" style="background:rgba(176,106,255,.08);color:var(--c2);">✓ Intención y/o adopción real de uso validada</div>
-            </div>
-            <div class="g crit-card" style="--pc:var(--c3);">
-              <span class="crit-num" style="background:var(--c3d);color:var(--c3);border:1px solid rgba(255,111,97,.2);">04</span>
-              <div class="crit-title" style="font-family:var(--fp);">Hipótesis de Alto Riesgo</div>
-              <ul class="crit-items">
-                <li>Supuestos de comportamiento</li>
-                <li>Supuestos técnicos y regulatorios</li>
-                <li>Experimentos de validación</li>
-              </ul>
-              <div class="crit-check" style="background:rgba(255,111,97,.08);color:var(--c3);">✓ Alto impacto + Alta incertidumbre identificados</div>
-            </div>
-            <div class="g crit-card" style="--pc:var(--c4);">
-              <span class="crit-num" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.2);">05</span>
-              <div class="crit-title" style="font-family:var(--fp);">North Star Preliminar</div>
-              <ul class="crit-items">
-                <li>Métrica que crece con PMF</li>
-                <li>Leading indicators</li>
-                <li>Lagging indicators</li>
-              </ul>
-              <div class="crit-check" style="background:rgba(255,184,54,.08);color:var(--c4);">✓ Claridad sobre qué significa ganar</div>
-            </div>
-            <div class="g crit-card" style="--pc:var(--c5);">
-              <span class="crit-num" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.2);">06</span>
-              <div class="crit-title" style="font-family:var(--fp);">Señales de No-Fit</div>
-              <ul class="crit-items">
-                <li>Baja intención de uso y/o adopción</li>
-                <li>Baja comprensión de propuesta</li>
-                <li>Alto costo de cambio</li>
-              </ul>
-              <div class="crit-check">✓ Definir cuándo detener antes de construir</div>
-            </div>
-          </div>
-          <div class="g reco-row" style="border-color:rgba(255,255,255,.08);">
-            <span class="reco-label">Recomendación</span>
-            <span class="reco-chip rc-go">Avanzar a MVP</span>
-            <span class="reco-chip rc-adj">Ajustar propuesta</span>
-            <span class="reco-chip rc-piv">Pivotar segmento</span>
-            <span class="reco-chip rc-stop">Detener iniciativa</span>
-            <span class="reco-chip rc-imp">Impulsar iniciativa</span>
-          </div>
+    <!-- outputs → outcomes — centered, Act 02 -->
+    <div class="rv" style="margin:56px auto 0;max-width:700px;text-align:center;">
+      <div style="font-family:var(--fp);font-size:clamp(1.3rem,2.8vw,2.2rem);font-weight:800;
+        letter-spacing:-.02em;color:var(--t2);line-height:1.15;margin-bottom:14px;">
+        Hoy estamos midiendo éxito de diseño con
+        <span style="color:var(--red);">outputs</span>, no con
+        <span style="color:var(--t1);">outcomes</span>
+      </div>
+      <p style="font-size:.84rem;color:var(--t3);margin-bottom:28px;line-height:1.7;">
+        Como líderes, tenemos una responsabilidad concreta frente a este cambio:
+      </p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">
+        <div class="g" style="padding:16px 22px;min-width:200px;text-align:left;">
+          <div style="font-family:var(--fm);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--t3);margin-bottom:7px;">Hoy gestionamos</div>
+          <div style="font-size:.88rem;color:var(--t2);font-weight:500;line-height:1.4;">
+            Entregables y acompañamiento de outputs</div>
+        </div>
+        <div style="font-size:1.3rem;color:rgba(255,77,77,.4);">→</div>
+        <div class="g" style="padding:16px 22px;min-width:200px;text-align:left;
+          border-color:rgba(0,229,204,.22);background:rgba(0,229,204,.05);">
+          <div style="font-family:var(--fm);font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--c0);margin-bottom:7px;">El cambio que necesitamos</div>
+          <div style="font-size:.88rem;color:var(--t1);font-weight:600;line-height:1.4;">
+            Gestionar y acompañar impacto real</div>
         </div>
       </div>
-      
     </div>
 
+    <!-- PMF Readiness Report — standalone después del ciclo de vida -->
+    <div id="pmf-report-section"></div>
+
+  </div>
+</section>
+
+
+<!-- ════
+     INTERSTICIAL — DECISION FLOW
+════ -->
+<section id="decision-flow">
+  <div class="wrap">
+    <div class="df-label rv">Sinergia con PMF Readiness Report</div>
+    <h2 class="df-headline rv">Cuatro preguntas que el framework garantiza responder</h2>
+    <p class="df-sub rv">Una cadena de decisión con dependencia lógica — cada pregunta habilita la siguiente.</p>
+
+    <div class="df-flow">
+
+      <!-- Node 0: PMF Readiness -->
+      <div class="g df-node df-n0 rv">
+        <span class="df-node-num">Punto de partida</span>
+        <div class="df-node-badge">PMF Readiness</div>
+        <div class="df-node-question">¿El problema merece ser resuelto?</div>
+        <p class="df-node-concept">Valida que exista un problema real, con un segmento claro y una propuesta de valor que justifique la inversión.</p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="df-connector rv" style="transition-delay:.08s;">
+        <svg width="28" height="16" viewBox="0 0 28 16" fill="none">
+          <path d="M0 8h24M18 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--t3);"/>
+        </svg>
+      </div>
+
+      <!-- Node 1: Trade-off -->
+      <div class="g df-node df-n1 rv" style="transition-delay:.12s;">
+        <span class="df-node-num">Tensión de decisión</span>
+        <div class="df-node-badge">Trade-off</div>
+        <div class="df-node-question">¿Qué priorizamos y qué aceptamos sacrificar?</div>
+        <p class="df-node-concept">Con el problema validado, el PD declara las renuncias: velocidad vs evidencia, alcance vs calidad, conversión vs fricción.</p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="df-connector rv" style="transition-delay:.2s;">
+        <svg width="28" height="16" viewBox="0 0 28 16" fill="none">
+          <path d="M0 8h24M18 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--t3);"/>
+        </svg>
+      </div>
+
+      <!-- Node 2: Time to Market -->
+      <div class="g df-node df-n2 rv" style="transition-delay:.28s;">
+        <span class="df-node-num">Velocidad responsable</span>
+        <div class="df-node-badge">Time to Market</div>
+        <div class="df-node-question">¿Qué evidencia mínima necesitamos para avanzar sin bloquear la salida?</div>
+        <p class="df-node-concept">Define la señal de PMF mínima: hipótesis, métrica, deuda aceptada y criterio de decisión antes de producción.</p>
+      </div>
+
+      <!-- Arrow -->
+      <div class="df-connector rv" style="transition-delay:.36s;">
+        <svg width="28" height="16" viewBox="0 0 28 16" fill="none">
+          <path d="M0 8h24M18 2l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--t3);"/>
+        </svg>
+      </div>
+
+      <!-- Node 3: Go-to-Market -->
+      <div class="g df-node df-n3 rv" style="transition-delay:.44s;">
+        <span class="df-node-num">Activación de valor</span>
+        <div class="df-node-badge">Go-to-Market</div>
+        <div class="df-node-question">¿Cómo se activará, comunicará, medirá y escalará el valor en el banco?</div>
+        <p class="df-node-concept">Conecta solución con segmento, canal, journey, mensaje, operación, data, cumplimiento y medición inicial.</p>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -1010,6 +1308,11 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
             <div class="pv"><strong>Readiness Report</strong> — Validamos si el problema es real y si la propuesta de valor encaja antes de construir.</div>
             <div class="po">Objetivo: reducir riesgo estratégico antes de invertir.</div>
           </div>
+          <button class="tension-chip" onclick="openModal('tension-p0')">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v4M6 3.5v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="tension-chip-label">Ver tensiones de decisión</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
         <div class="g cjmcard">
           <span class="cbadge">Artefacto Dinámico</span>
@@ -1050,6 +1353,61 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
           <div style="font-size:.79rem;color:var(--t3);line-height:1.55;">Saltar directo a soluciones sin mapear oportunidades. Construir el producto antes de validar que el problema es real.</div>
         </div>
       </div>
+
+        <!-- PMF Readiness Report — fase 1 -->
+        <div class="g pmf-report-inline rv" style="margin-top:24px;padding:22px 24px;border-color:rgba(0,229,204,.2);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+            <span style="font-family:var(--fm);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--c0);">Herramienta · F1</span>
+          </div>
+          <div class="pmf-report-title" style="font-family:var(--fp);margin-bottom:6px;">PMF Readiness Report</div>
+          <div class="pmf-report-sub" style="margin-bottom:16px;">Evaluación preliminar antes de inversión significativa. El PD acompaña y facilita a PM y Negocio en el marco de evaluación.</div>
+          <div class="pmf-criteria">
+            <div class="g crit-card" style="--pc:var(--c0);">
+              <span class="crit-num" style="background:var(--c0d);color:var(--c0);border:1px solid rgba(0,229,204,.2);">01</span>
+              <div class="crit-title" style="font-family:var(--fp);">Problema Correcto</div>
+              <ul class="crit-items"><li>Problem Statement validado</li><li>Jobs to be Done</li><li>Evidencia cualitativa + cuantitativa</li></ul>
+              <div class="crit-check">✓ Recurrente y relevante, no anecdótico</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c1);">
+              <span class="crit-num" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.2);">02</span>
+              <div class="crit-title" style="font-family:var(--fp);">Tamaño de Oportunidad</div>
+              <ul class="crit-items"><li>Opportunity Assessment</li><li>Análisis de mercado</li><li>Competidores y sustitutos</li></ul>
+              <div class="crit-check" style="background:rgba(91,143,255,.08);color:var(--c1);">✓ Mercado suficiente o impacto estratégico claro</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c2);">
+              <span class="crit-num" style="background:var(--c2d);color:var(--c2);border:1px solid rgba(176,106,255,.2);">03</span>
+              <div class="crit-title" style="font-family:var(--fp);">Encaje Propuesta–Cliente</div>
+              <ul class="crit-items"><li>Value Proposition Canvas</li><li>Concept testing</li><li>Fake door / Smoke test</li></ul>
+              <div class="crit-check" style="background:rgba(176,106,255,.08);color:var(--c2);">✓ Intención y/o adopción real de uso validada</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c3);">
+              <span class="crit-num" style="background:var(--c3d);color:var(--c3);border:1px solid rgba(255,111,97,.2);">04</span>
+              <div class="crit-title" style="font-family:var(--fp);">Hipótesis de Alto Riesgo</div>
+              <ul class="crit-items"><li>Supuestos de comportamiento</li><li>Supuestos técnicos y regulatorios</li><li>Experimentos de validación</li></ul>
+              <div class="crit-check" style="background:rgba(255,111,97,.08);color:var(--c3);">✓ Alto impacto + Alta incertidumbre identificados</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c4);">
+              <span class="crit-num" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.2);">05</span>
+              <div class="crit-title" style="font-family:var(--fp);">North Star Preliminar</div>
+              <ul class="crit-items"><li>Métrica que crece con PMF</li><li>Leading indicators</li><li>Lagging indicators</li></ul>
+              <div class="crit-check" style="background:rgba(255,184,54,.08);color:var(--c4);">✓ Claridad sobre qué significa ganar</div>
+            </div>
+            <div class="g crit-card" style="--pc:var(--c5);">
+              <span class="crit-num" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.2);">06</span>
+              <div class="crit-title" style="font-family:var(--fp);">Señales de No-Fit</div>
+              <ul class="crit-items"><li>Baja intención de uso y/o adopción</li><li>Baja comprensión de propuesta</li><li>Alto costo de cambio</li></ul>
+              <div class="crit-check">✓ Definir cuándo detener antes de construir</div>
+            </div>
+          </div>
+          <div class="g reco-row" style="border-color:rgba(255,255,255,.08);margin-top:14px;">
+            <span class="reco-label">Recomendación</span>
+            <span class="reco-chip rc-go">Avanzar a MVP</span>
+            <span class="reco-chip rc-adj">Ajustar propuesta</span>
+            <span class="reco-chip rc-piv">Pivotar segmento</span>
+            <span class="reco-chip rc-stop">Detener iniciativa</span>
+            <span class="reco-chip rc-imp">Impulsar iniciativa</span>
+          </div>
+        </div>
     </div>
 
     <!-- ── PANEL 1 ── -->
@@ -1061,6 +1419,11 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
           <div class="pfoc">/ Foco en la activación /</div>
           <div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿El cliente llega al 'aha moment'?"</div></div>
           <div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Activación</strong> — Medimos si el usuario entiende y experimenta el valor en su primer contacto.</div><div class="po">Objetivo: validar la dirección antes del desarrollo completo.</div></div>
+          <button class="tension-chip" onclick="openModal('tension-p1')">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v4M6 3.5v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="tension-chip-label">Ver tensiones de decisión</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
         </div>
         <div class="g cjmcard">
           <span class="cbadge">Artefacto Dinámico</span>
@@ -1091,7 +1454,12 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
     <!-- ── PANEL 2 ── -->
     <div class="panel" id="p2" style="--pc:var(--c2);--pd:var(--c2d);--pc-b:rgba(176,106,255,.22);">
       <div class="phase-hero">
-        <div class="g hcard"><div class="ptag">Fase 3 · Post-lanzamiento</div><div class="pname">Retención<br>y Hábito</div><div class="pfoc">/ Foco en la recurrencia /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿El cliente vuelve por valor, no por hábito?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Retención</strong> — Identificamos usuarios en riesgo y amplificamos a quienes ya encontraron valor.</div><div class="po">Objetivo: validar comportamiento real.</div></div></div>
+        <div class="g hcard"><div class="ptag">Fase 3 · Post-lanzamiento</div><div class="pname">Retención<br>y Hábito</div><div class="pfoc">/ Foco en la recurrencia /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿El cliente vuelve por valor, no por hábito?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Retención</strong> — Identificamos usuarios en riesgo y amplificamos a quienes ya encontraron valor.</div><div class="po">Objetivo: validar comportamiento real.</div></div>
+          <button class="tension-chip" onclick="openModal('tension-p2')">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v4M6 3.5v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="tension-chip-label">Ver tensiones de decisión</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button></div>
         <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM de Fricción, Recurrencia y Abandono (Churn)</div><div class="cdesc">Mapea los puntos de fuga y razones por las que el usuario deja de usar el producto.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Optimizar la retención. Eliminar pasos innecesarios para que la tarea principal sea invisible y rápida.</span></div></div>
       </div>
       <div class="tcol">
@@ -1113,7 +1481,12 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
     <!-- ── PANEL 3 ── -->
     <div class="panel" id="p3" style="--pc:var(--c3);--pd:var(--c3d);--pc-b:rgba(255,111,97,.22);">
       <div class="phase-hero">
-        <div class="g hcard"><div class="ptag">Fase 4 · Crecimiento</div><div class="pname">Escalabilidad<br>y Expansión</div><div class="pfoc">/ Foco en la expansión /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Podemos recuperar y profundizar?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Expansión</strong> — Identificamos clientes en riesgo y profundizamos a quienes ya encontraron valor.</div><div class="po">Objetivo: mejorar retención y calidad.</div></div></div>
+        <div class="g hcard"><div class="ptag">Fase 4 · Crecimiento</div><div class="pname">Escalabilidad<br>y Expansión</div><div class="pfoc">/ Foco en la expansión /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Podemos recuperar y profundizar?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Validación de Expansión</strong> — Identificamos clientes en riesgo y profundizamos a quienes ya encontraron valor.</div><div class="po">Objetivo: mejorar retención y calidad.</div></div>
+          <button class="tension-chip" onclick="openModal('tension-p3')">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v4M6 3.5v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="tension-chip-label">Ver tensiones de decisión</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button></div>
         <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM de Recurrencia y Expansión (Habit Loop)</div><div class="cdesc">Mapea el uso diario/semanal para identificar fricciones en la tarea principal. Busca que la tarea sea invisible y rápida.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Reducir fricción y asegurar alta tasa de activación en el uso recurrente.</span></div></div>
       </div>
       <div class="tcol">
@@ -1135,7 +1508,12 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
     <!-- ── PANEL 4 ── -->
     <div class="panel" id="p4" style="--pc:var(--c4);--pd:var(--c4d);--pc-b:rgba(255,184,54,.22);">
       <div class="phase-hero">
-        <div class="g hcard"><div class="ptag">Fase 5 · Madurez</div><div class="pname">Eficiencia<br>y Cross-sell</div><div class="pfoc">/ Foco en eficiencia y cross-sell /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Seguimos siendo relevantes?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Evolución del PMF</strong> — Evaluamos si el PMF sigue vigente o si el mercado evolucionó y necesitamos pivotar.</div><div class="po">Objetivo: eficiencia y rentabilidad.</div></div></div>
+        <div class="g hcard"><div class="ptag">Fase 5 · Madurez</div><div class="pname">Eficiencia<br>y Cross-sell</div><div class="pfoc">/ Foco en eficiencia y cross-sell /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Seguimos siendo relevantes?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Evolución del PMF</strong> — Evaluamos si el PMF sigue vigente o si el mercado evolucionó y necesitamos pivotar.</div><div class="po">Objetivo: eficiencia y rentabilidad.</div></div>
+          <button class="tension-chip" onclick="openModal('tension-p4')">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v4M6 3.5v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="tension-chip-label">Ver tensiones de decisión</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button></div>
         <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM de Expansión (Cross-sell / Upsell)</div><div class="cdesc">Mapea el viaje hacia el descubrimiento de nuevas funcionalidades o productos del banco.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Aumentar el CLTV del cliente a través de nuevos productos relevantes en el momento correcto.</span></div></div>
       </div>
       <div class="tcol">
@@ -1156,7 +1534,12 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
     <!-- ── PANEL 5 ── -->
     <div class="panel" id="p5" style="--pc:var(--c5);--pd:var(--c5d);--pc-b:rgba(61,220,151,.22);">
       <div class="phase-hero">
-        <div class="g hcard"><div class="ptag">Fase 6 · Evolución (Renewal)</div><div class="pname">Renewal Loop<br>— Reinvención</div><div class="pfoc">/ Foco en la reinvención /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Cómo debemos evolucionar para no ser irrelevantes?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Innovación vs. Declive</strong> — El PD detecta señales de obsolescencia, pivota la propuesta de valor y reinicia el ciclo con evidencia.</div><div class="po">El PD no espera que el producto muera — activa el Renewal Loop proactivamente desde madurez.</div></div></div>
+        <div class="g hcard"><div class="ptag">Fase 6 · Evolución (Renewal)</div><div class="pname">Renewal Loop<br>— Reinvención</div><div class="pfoc">/ Foco en la reinvención /</div><div class="sq"><div class="ql">Pregunta estratégica</div><div class="qt">"¿Cómo debemos evolucionar para no ser irrelevantes?"</div></div><div class="pmfd"><div class="pl">Dimensión PMF</div><div class="pv"><strong>Innovación vs. Declive</strong> — El PD detecta señales de obsolescencia, pivota la propuesta de valor y reinicia el ciclo con evidencia.</div><div class="po">El PD no espera que el producto muera — activa el Renewal Loop proactivamente desde madurez.</div></div>
+          <button class="tension-chip" onclick="openModal('tension-p5')">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v4M6 3.5v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span class="tension-chip-label">Ver tensiones de decisión</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button></div>
         <div class="g cjmcard"><span class="cbadge">Artefacto Dinámico</span><div class="ctitle">CJM To-Be · Estado Futuro</div><div class="cdesc">Mapea la visión ideal a 1-2 años integrando nuevas tecnologías o modelos de negocio. Alinea a negocio y tecnología sobre el próximo gran salto.</div><div class="cgoal"><span class="gl">Objetivo</span><span class="gt">Reiniciar el ciclo con evidencia. El activo del banco se mantiene en estado perpetuo de relevancia.</span></div></div>
       </div>
       <div class="tcol">
@@ -1225,101 +1608,27 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
       </div>
     </div>
 
-    <!-- Propósito -->
-    <div class="pilot-purpose rv">
-      <div class="g pp-card glow-c1" style="border-color:rgba(255,184,54,.18);">
+    <!-- Propósito — 3 cards -->
+    <div class="pilot-purpose rv" style="grid-template-columns:repeat(3,1fr);">
+      <div class="g pp-card" style="border-color:rgba(255,184,54,.18);">
         <span class="pp-icon">🎯</span>
         <div class="pp-title" style="color:var(--c4);">Reducir riesgo estratégico</div>
-       <ul>
-          <li> <p class="pp-desc">Implementar el PMF Readiness antes de construir.</li>
-          <li><p class="pp-desc">Cada entregable debe tener: <span style="color:var(--gold);">problema explícito, KPI principal y estimación de impacto/esfuerzo</span>.</p></li>
-        </ul>
+        <p class="pp-desc">PMF Readiness antes de construir. Cada entregable con problema explícito, KPI principal y criterio de decisión <span style="color:var(--gold);">Go / Ajustar / Pivotar</span>.</p>
       </div>
-      <div class="g pp-card" style="border-color:rgba(91,143,255,.18);" >
+      <div class="g pp-card" style="border-color:rgba(91,143,255,.18);">
         <span class="pp-icon">⚡</span>
-        <div class="pp-title" style="color:var(--c1);">Aumentar Activation & Retention</div>
-       <ul>
-          <li> <p class="pp-desc">Incrementar la tasa de clientes que alcanzan el Aha! y minimizar fugas tempranas.</p>
-          </li>
-          <li> <p class="pp-desc">El diseño conecta directamente con métricas de negocio.</p>
-          </li>
-        </ul>
-      </div>
-      <div class="g pp-card" style="border-color:rgba(0,229,204,.18);">
-        <span class="pp-icon">🧠</span>
-        <div class="pp-title" style="color:var(--c0);">Mindset de Product Designer</div>
-        <p class="pp-desc">Desarrollar decisiones basadas en evidencia con entregables utilizables para PM, Data y Dev.</p>
-      </div>
-      <div class="g pp-card" style="border-color:rgba(176,106,255,.18);">
-        <span class="pp-icon">📐</span>
-        <div class="pp-title" style="color:var(--c2);">Estandarizar ritmo</div>
-        <ul>
-          <li><p class="pp-desc">Reducir variabilidad en la calidad de los entregables.</p>
-          </li>
-          <li><p class="pp-desc">SLA (Service Level Agreement) operativos claros que aceleren la toma de decisiones estratégicas en el ciclo de vida del producto.</p>
-          </li>
-        </ul>
+        <div class="pp-title" style="color:var(--c1);">Activation & Retention</div>
+        <p class="pp-desc">Incrementar la tasa de clientes que alcanzan el Aha! moment y minimizar fugas tempranas. El diseño conecta con métricas de negocio.</p>
       </div>
       <div class="g pp-card" style="border-color:rgba(61,220,151,.18);">
-        <span class="pp-icon">🔬</span>
-        <div class="pp-title" style="color:var(--c5);">Experimentación</div>
-        <ul>
-          <li><p class="pp-desc">Plan de Experimentación, cuando existe mayor oportunidad o claridad para ejecutarlo.</p></li>
-          <li><p class="pp-desc">Cuando la estimación de impacto es compleja de estimar.</p></li>
-        </ul>
-      </div>
-      <div class="g pp-card" style="border-color:rgba(255,111,97,.18);">
         <span class="pp-icon">📈</span>
-        <div class="pp-title" style="color:var(--c3);">Escalable al CoE</div>
-       <ul>
-        <li><p class="pp-desc">Aprendizaje desde el piloto para replicar el modelo hacia otros frentes del CoE.</p></li>
-        <li><p class="pp-desc">El piloto es la prueba de concepto de un sistema de gestión de valor real.</p></li>
-      </ul> 
+        <div class="pp-title" style="color:var(--c5);">Escalable al CoE</div>
+        <p class="pp-desc">El piloto es la prueba de concepto de un sistema de gestión de valor real. Cada aprendizaje escala hacia todos los frentes del CoE de Diseño.</p>
       </div>
     </div>
 
-    <!-- Quick Wins por fase del framework -->
+    <!-- Quick Wins — removed, covered by Act 03 -->
     <div class="rv" style="margin-bottom:48px;">
-      <div class="checklist-title">Quick Wins por fase del Framework PD</div>
-      <div class="checklist-sub">Tácticas accionables alineadas a las 6 fases del ciclo de vida del producto</div>
-      <div class="qw-ribbon g" style="border-radius:16px;">
-        <div class="qw-phase">
-          <div class="qwp-label">F1 · Pre-lanzamiento</div>
-          <div class="qwp-name" style="color:var(--c0);">PMF Readiness<br>mini-report</div>
-          <div class="qwp-win">Valida problema + intención antes de construir. KPI principal + estimación de impacto obligatorios.</div>
-          <span class="qwp-tag" style="background:var(--c0d);color:var(--c0);border:1px solid rgba(0,229,204,.3);">Discovery Gate</span>
-        </div>
-        <div class="qw-phase">
-          <div class="qwp-label">F2 · Lanzamiento</div>
-          <div class="qwp-name" style="color:var(--c1);">Aha! Moment<br>Mapping</div>
-          <div class="qwp-win">Define el momento exacto en que el usuario percibe el valor. Métrica de activación acordada con PM.</div>
-          <span class="qwp-tag" style="background:var(--c1d);color:var(--c1);border:1px solid rgba(91,143,255,.3);">Activation KPI</span>
-        </div>
-        <div class="qw-phase">
-          <div class="qwp-label">F3 · Post-lanzamiento</div>
-          <div class="qwp-name" style="color:var(--c2);">Retention<br>Risk Scan</div>
-          <div class="qwp-win">Identifica fugas tempranas del funnel. Prioriza frictions críticas con evidencia cuantitativa.</div>
-          <span class="qwp-tag" style="background:var(--c2d);color:var(--c2);border:1px solid rgba(176,106,255,.3);">Churn Detector</span>
-        </div>
-        <div class="qw-phase">
-          <div class="qwp-label">F4 · Crecimiento</div>
-          <div class="qwp-name" style="color:var(--c3);">Growth Loop<br>Canvas</div>
-          <div class="qwp-win">Mapea el loop de valor sostenible. Conecta comportamiento del usuario con métricas de negocio.</div>
-          <span class="qwp-tag" style="background:var(--c3d);color:var(--c3);border:1px solid rgba(255,111,97,.3);">Loop Design</span>
-        </div>
-        <div class="qw-phase">
-          <div class="qwp-label">F5 · Madurez</div>
-          <div class="qwp-name" style="color:var(--c4);">Impact vs Effort<br>Prioritization</div>
-          <div class="qwp-win">Mapeo de iniciativas por impacto estimado y esfuerzo. Decisión de Go / Adjust / Pivot documentada.</div>
-          <span class="qwp-tag" style="background:var(--c4d);color:var(--c4);border:1px solid rgba(255,184,54,.3);">Decision Matrix</span>
-        </div>
-        <div class="qw-phase">
-          <div class="qwp-label">F6 · Evolución</div>
-          <div class="qwp-name" style="color:var(--c5);">Renewal Signal<br>Tracker</div>
-          <div class="qwp-win">Detecta señales de obsolescencia desde la madurez. Activa Renewal Loop con hipótesis validadas.</div>
-          <span class="qwp-tag" style="background:var(--c5d);color:var(--c5);border:1px solid rgba(61,220,151,.3);">Renewal Loop</span>
-        </div>
-      </div>
     </div>
 
     <!-- PMF Readiness mini-report -->
@@ -1476,12 +1785,18 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
       </div>
     </div>
 
-<!-- SECCIÓN DE RIESGOS Y CONTROL DEL PILOTO -->
+
+<!-- SECCIÓN DE RIESGOS Y CONTROL DEL PILOTO — compacta -->
 <div id="gestion-riesgos-piloto" class="rv" style="margin-top:40px; margin-bottom:60px;">
-  <div class="g" style="padding:32px; border-top: 4px solid var(--c3);">
-    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:40px; flex-wrap:wrap;">
-      
-      <div style="flex:2; min-width:320px;">
+  <div class="g" style="padding:24px 28px; border-top: 3px solid var(--c3); display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+    <div>
+      <div class="pill" style="color:var(--c3); background:var(--c3d); margin-bottom:10px;">Gobernanza del Piloto</div>
+      <h3 style="font-family:var(--fp); font-size:1.1rem; font-weight:700; margin-bottom:6px;">Riesgos relevantes & Mitigaciones</h3>
+      <p style="font-size:.8rem; color:var(--t3); line-height:1.6; max-width:520px;">5 riesgos identificados con impacto, mitigación y métrica — Priorización · Visibilidad · Datos · Procesos · Dependencias.</p>
+    </div>
+    <button onclick="openModal('modal-risks-pilot')" class="cb-cta" style="color:var(--t2);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04);">Ver riesgos y mitigaciones →</button>
+    <!-- hidden original content -->
+    <div style="display:none;"><div style="flex:2; min-width:320px;">
         <div class="pill" style="color:var(--c3); background:var(--c3d); margin-bottom:12px;">Gobernanza del Piloto</div>
         <h3 style="font-family:var(--fp); font-size:1.6rem; font-weight:800; margin-bottom:16px;">Riesgos relevantes & Mitigaciones</h3>
         
@@ -1589,14 +1904,14 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
         5. <strong>Satisfacción interna</strong> — Pulse NPS interno (Diseñadores, PMs, Tribe Leads) medido inicio / mid / cierre.
       </div>
     </div>
-    <div style="flex:0 0 220px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+    <!-- <div style="flex:0 0 220px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
       <a id="kpi-dashboard-link" href="#" style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(0,229,204,.08);border:1px solid rgba(0,229,204,.18);color:var(--c0);text-decoration:none;font-weight:600;font-family:var(--fp);">Ver Dashboard (plantilla)</a>
       <div style="font-size:.75rem;color:var(--t3);text-align:right;">Owner: <strong>Líder PD</strong><br>Cadencia: quincenal / cierre</div>
-    </div>
+    </div> -->
   </div>
 </div>
 
-    </div>
+    </div></div></div>
   </div>
 </div>
 
@@ -1610,7 +1925,243 @@ footer{padding:32px 0;border-top:1px solid rgba(255,255,255,.07);
   </footer>
 </div>
 
+<!-- ════ FONT ACCESSIBILITY WIDGET ════ -->
+<style>
+/* ── Font scaler: affect only body-level text, not h1/h2/h3 ── */
+body {
+  --fs-base: 1rem;
+}
+/* Scalable text targets */
+p, li, .hero-sub, .pc-desc, .pmfd .pv, .pmfd .po,
+.crit-items li, .pmf-report-sub, .h2-sub,
+.symp-text, .pd-banner-text, .ls-quote,
+.ls-val, .ps-desc, .pv, .act3-header p,
+.reco-chip, [style*="font-size:.8rem"],
+[style*="font-size:.85rem"], [style*="font-size:.9rem"],
+[style*="font-size:.75rem"] {
+  font-size: calc(var(--fs-base) * var(--font-scale, 1)) !important;
+}
+
+/* ── Widget container ── */
+#font-scaler {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Toggle button (always visible, semi-transparent) ── */
+#font-scaler-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 229, 204, 0.12);
+  border: 1px solid rgba(0, 229, 204, 0.22);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: none;
+  opacity: 0.38;
+  transition:
+    opacity .3s var(--out),
+    background .3s,
+    box-shadow .3s,
+    transform .3s var(--spring);
+  box-shadow: 0 4px 24px rgba(0,0,0,.35);
+  position: relative;
+  z-index: 2;
+}
+#font-scaler:hover #font-scaler-toggle,
+#font-scaler.open #font-scaler-toggle {
+  opacity: 1;
+  background: rgba(0, 229, 204, 0.2);
+  box-shadow: 0 4px 28px rgba(0,229,204,.25), 0 2px 12px rgba(0,0,0,.4);
+}
+#font-scaler.open #font-scaler-toggle {
+  transform: rotate(180deg);
+  background: rgba(0, 229, 204, 0.28);
+}
+#font-scaler-toggle svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--c0);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── Dropdown panel ── */
+#font-scaler-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  background: rgba(9, 9, 36, 0.82);
+  border: 1px solid rgba(0, 229, 204, 0.18);
+  border-radius: 16px;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 16px 48px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.06) inset;
+  margin-bottom: 10px;
+  /* Hidden state */
+  opacity: 0;
+  transform: translateY(10px) scale(.96);
+  pointer-events: none;
+  transition:
+    opacity .3s var(--out),
+    transform .35s var(--spring);
+}
+#font-scaler.open #font-scaler-panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* ── Scale buttons ── */
+.fs-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.05);
+  color: var(--t2);
+  font-family: var(--fp);
+  font-weight: 700;
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .22s var(--spring);
+  line-height: 1;
+  user-select: none;
+}
+.fs-btn:hover {
+  background: rgba(0, 229, 204, 0.15);
+  border-color: rgba(0, 229, 204, 0.35);
+  color: var(--c0);
+  transform: scale(1.08);
+}
+.fs-btn:active {
+  transform: scale(.95);
+}
+.fs-btn.fs-increase { font-size: 1.1rem; }
+.fs-btn.fs-decrease { font-size: .78rem; }
+.fs-btn.fs-reset {
+  font-family: var(--fm);
+  font-size: .55rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--t3);
+  border-style: dashed;
+}
+.fs-btn.fs-reset:hover {
+  color: var(--c0);
+  border-style: solid;
+}
+
+/* ── Level indicator ── */
+#fs-level {
+  font-family: var(--fm);
+  font-size: .52rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--t3);
+  padding: 4px 0 2px;
+}
+#fs-level span {
+  color: var(--c0);
+  font-weight: 600;
+}
+
+/* ── Divider ── */
+.fs-divider {
+  width: 20px;
+  height: 1px;
+  background: rgba(255,255,255,.08);
+  margin: 2px 0;
+}
+
+/* ── Tooltip on hover (before open) ── */
+#font-scaler-toggle::after {
+  content: 'Tamaño de texto';
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--fm);
+  font-size: .55rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--t2);
+  background: rgba(9,9,36,.88);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  padding: 5px 10px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+  backdrop-filter: blur(12px);
+}
+#font-scaler:hover:not(.open) #font-scaler-toggle::after {
+  opacity: 1;
+}
+</style>
+
+<div id="font-scaler">
+  <div id="font-scaler-panel" role="group" aria-label="Tamaño de fuente">
+    <button class="fs-btn fs-increase" id="fs-up" aria-label="Aumentar tamaño de fuente" title="Aumentar">A+</button>
+    <div id="fs-level">Texto: <span id="fs-val">100%</span></div>
+    <div class="fs-divider"></div>
+    <button class="fs-btn fs-decrease" id="fs-down" aria-label="Reducir tamaño de fuente" title="Reducir">A−</button>
+    <div class="fs-divider"></div>
+    <button class="fs-btn fs-reset" id="fs-reset" aria-label="Restablecer tamaño" title="Restablecer">Reset</button>
+  </div>
+  <button id="font-scaler-toggle" aria-label="Ajustar tamaño de texto" aria-expanded="false">
+    <svg viewBox="0 0 24 24">
+      <!-- "Aa" icon -->
+      <text x="2" y="17" font-size="14" font-weight="700" font-family="sans-serif"
+        fill="var(--c0)" stroke="none" style="font-size:14px">A</text>
+      <text x="13" y="20" font-size="10" font-weight="500" font-family="sans-serif"
+        fill="rgba(0,229,204,.6)" stroke="none" style="font-size:10px">a</text>
+    </svg>
+  </button>
+</div>
+
 <script>
+/* ── MODALS ── */
+function openModal(id){
+  const m=document.getElementById(id);
+  if(!m)return;
+  m.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){
+  const m=document.getElementById(id);
+  if(!m)return;
+  m.classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeModalOutside(e,overlay){
+  if(e.target===overlay||e.target.classList.contains('modal-backdrop'))
+    {overlay.classList.remove('open');document.body.style.overflow='';}
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal-overlay.open').forEach(m=>{
+      m.classList.remove('open');document.body.style.overflow='';
+    });
+  }
+});
+
 /* ── CURSOR ── */
 const cd=document.getElementById('cdot'),cr=document.getElementById('cring');
 let mx=0,my=0,rx=0,ry=0;
@@ -1627,17 +2178,20 @@ window.addEventListener('scroll',()=>{
 },{ passive:true });
 
 /* ── NAV ACTIVE ── */
-const acts=['act1','act2','act3','act4'];
+const acts=['act1','act2','decision-flow','act3','act4'];
 const navLinks=document.querySelectorAll('.nav-act');
-const io=new IntersectionObserver(es=>{
-  es.forEach(e=>{
-    if(e.isIntersecting){
-      const id=e.target.id;
-      navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+id));
-    }
+
+function updateActiveNav(){
+  const scrollY=window.scrollY+window.innerHeight*0.35;
+  let current='act1';
+  acts.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.offsetTop<=scrollY) current=id;
   });
-},{threshold:.3});
-acts.forEach(id=>{const el=document.getElementById(id);if(el)io.observe(el);});
+  navLinks.forEach(l=>l.classList.toggle('active',l.getAttribute('href')==='#'+current));
+}
+window.addEventListener('scroll',updateActiveNav,{passive:true});
+updateActiveNav();
 
 /* ── ORB COLOUR PER PHASE ── */
 const orbDefs=[
@@ -1717,6 +2271,363 @@ document.addEventListener('touchend',e=>{
 /* INTRO-QUOTE-JS — para ocultar el intro, comenta desde aquí... */
 (function(){const o=document.getElementById('intro-overlay');if(!o)return;document.body.classList.add('intro-active');const t=setTimeout(dismiss,4500);document.getElementById('intro-skip-btn').addEventListener('click',dismiss);function dismiss(){clearTimeout(t);o.classList.add('hide');document.body.classList.remove('intro-active');window.scrollTo({top:0,behavior:'instant'});setTimeout(()=>{o.style.display='none';},950);}})();
 /* ...hasta aquí para ocultar el intro */
+
+/* ── FONT SCALER ── */
+(function(){
+  const root = document.documentElement;
+  const widget = document.getElementById('font-scaler');
+  const toggle = document.getElementById('font-scaler-toggle');
+  const btnUp = document.getElementById('fs-up');
+  const btnDown = document.getElementById('fs-down');
+  const btnReset = document.getElementById('fs-reset');
+  const valLabel = document.getElementById('fs-val');
+
+  const STEP = 0.1;
+  const MIN = 0.8;
+  const MAX = 1.5;
+  const DEFAULT = 1.0;
+
+  let scale = parseFloat(localStorage.getItem('pd-font-scale') || DEFAULT);
+
+  function applyScale(s) {
+    scale = Math.min(MAX, Math.max(MIN, Math.round(s * 100) / 100));
+    root.style.setProperty('--font-scale', scale);
+    valLabel.textContent = Math.round(scale * 100) + '%';
+    btnUp.disabled = scale >= MAX;
+    btnDown.disabled = scale <= MIN;
+    btnUp.style.opacity = scale >= MAX ? '.3' : '';
+    btnDown.style.opacity = scale <= MIN ? '.3' : '';
+    localStorage.setItem('pd-font-scale', scale);
+  }
+
+  function togglePanel() {
+    const isOpen = widget.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen);
+  }
+
+  toggle.addEventListener('click', togglePanel);
+  btnUp.addEventListener('click', () => applyScale(scale + STEP));
+  btnDown.addEventListener('click', () => applyScale(scale - STEP));
+  btnReset.addEventListener('click', () => applyScale(DEFAULT));
+
+  // Close on outside click
+  document.addEventListener('click', e => {
+    if (!widget.contains(e.target)) {
+      widget.classList.remove('open');
+      toggle.setAttribute('aria-expanded', false);
+    }
+  });
+
+  // Init
+  applyScale(scale);
+})();
 </script>
+
+<!-- Modal ACT02 — 1: Trade-off -->
+<div class="modal-overlay" id="modal-tradeoff-fw" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box accent-c0">
+    <div class="modal-header">
+      <div class="modal-tag c0">Actor estratégico · Trade-off</div>
+      <div class="modal-title">El PD declara, mide y gestiona las tensiones</div>
+      <button class="modal-close c0" onclick="closeModal('modal-tradeoff-fw')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-para">El Product Designer hace visibles las <strong>tensiones de decisión</strong> que normalmente quedan implícitas en las reuniones de producto y negocio.</p>
+      <div class="modal-highlight c0"><p>Su aporte no es eliminar el trade-off — sino <span style="color:var(--c0);font-weight:700;">declararlo, medirlo y gestionarlo</span> con criterio de diseño y evidencia.</p></div>
+      <p class="modal-para">Las tensiones más frecuentes que el PD tiene la responsabilidad de nombrar:</p>
+      <div class="modal-chips">
+        <span class="modal-chip c0">Valor cliente vs valor negocio</span>
+        <span class="modal-chip c0">Velocidad vs evidencia</span>
+        <span class="modal-chip c0">Alcance vs calidad</span>
+        <span class="modal-chip c0">Conversión vs fricción</span>
+        <span class="modal-chip c0">Revenue vs confianza</span>
+      </div>
+      <p class="modal-para" style="margin-top:20px;">Nombrar el trade-off no es bloquear la decisión. Es darle al equipo la claridad que necesita para <strong>decidir conscientemente</strong> qué se acepta y qué se compensa — y documentarlo para que la deuda UX sea gestionable, no invisible.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ACT02 — 2: Time to Market + PMF -->
+<div class="modal-overlay" id="modal-ttm-fw" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box accent-c1">
+    <div class="modal-header">
+      <div class="modal-tag c1">Decisiones con evidencia · PMF + Time to Market</div>
+      <div class="modal-title">Product-Market Fit no es un resultado — es una condición</div>
+      <button class="modal-close c1" onclick="closeModal('modal-ttm-fw')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-para"><strong>Product-Market Fit</strong> no llega solo con lanzar. Se construye antes de salir, con claridad sobre el problema real, la propuesta de valor y la evidencia mínima que confirme que merece ser construido.</p>
+      <div class="modal-highlight c1"><p>El framework garantiza que cada decisión de salida tenga <span style="color:var(--c1);font-weight:700;">PMF como condición</span>, no como expectativa post-lanzamiento.</p></div>
+      <p class="modal-para">El Time to Market se entiende como <strong>velocidad responsable</strong>: avanzar rápido, pero con claridad mínima verificada en cinco dimensiones clave que el PD facilita junto con PM y Negocio:</p>
+      <div class="modal-chips">
+        <span class="modal-chip c1">Problema validado</span>
+        <span class="modal-chip c1">Hipótesis de valor explícita</span>
+        <span class="modal-chip c1">Señal de PMF definida</span>
+        <span class="modal-chip c1">Deuda aceptada y declarada</span>
+        <span class="modal-chip c1">Criterio de decisión claro</span>
+      </div>
+      <p class="modal-para" style="margin-top:20px;">Sin estas claridades, salir rápido es apostar. Con ellas, salir rápido es <strong>aprender rápido</strong>. El PMF Readiness Report que se detalla más adelante en este framework es la herramienta concreta para verificar estas condiciones antes de cada lanzamiento.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ACT02 — 3: Go-to-Market -->
+<div class="modal-overlay" id="modal-gtm-fw" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box accent-c5">
+    <div class="modal-header">
+      <div class="modal-tag c5">Sistema de valor · Go-to-Market</div>
+      <div class="modal-title">Conectar la solución con la activación real de valor</div>
+      <button class="modal-close c5" onclick="closeModal('modal-gtm-fw')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-para">Go-to-Market conecta la solución con la <strong>forma real en que el banco activa valor</strong> en el cliente. No es solo lanzar — es asegurar que lo que se construyó llega a quien debe llegar, por el canal correcto, en el momento correcto del journey.</p>
+      <div class="modal-highlight c5"><p>Desde Product Design, <span style="color:var(--c5);font-weight:700;">GTM no reemplaza a negocio o marketing</span>. Los conecta con experiencia y evidencia.</p></div>
+      <p class="modal-para">Las dimensiones del GTM que el PD acompaña y facilita:</p>
+      <div class="modal-chips">
+        <span class="modal-chip c5">Segmento</span>
+        <span class="modal-chip c5">Canal</span>
+        <span class="modal-chip c5">Journey</span>
+        <span class="modal-chip c5">Mensaje de valor</span>
+        <span class="modal-chip c5">Operación</span>
+        <span class="modal-chip c5">Data</span>
+        <span class="modal-chip c5">Cumplimiento</span>
+        <span class="modal-chip c5">Medición inicial</span>
+      </div>
+      <p class="modal-para" style="margin-top:20px;">El diseño deja de ser ejecución y pasa a ser el sistema que asegura que la solución <strong>genere adopción real</strong> — no solo delivery. Producción sin GTM claro es capacidad desplegada sin demanda activada.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Tension modal tension-p0 -->
+<div class="modal-overlay" id="tension-p0" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,255,255,.1);">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);">Tensiones de decisión</div>
+      <div class="modal-title">F1 · Pre-lanzamiento — Tensiones de decisión</div>
+      <button class="modal-close" onclick="closeModal('tension-p0')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmodal-row">
+        <div class="tmodal-block tb-red">
+          <div class="tb-label rl">⚖️ Trade-off</div>
+          <div class="tb-q">¿Evidencia vs velocidad de construcción?</div>
+          <div class="tb-desc">Definir cuánta validación se necesita antes de invertir en construcción. El riesgo de construir sin evidencia supera al costo de validar mínimamente.</div>
+        </div>
+        <div class="tmodal-block tb-blue">
+          <div class="tb-label bl">⏱ Time to Market</div>
+          <div class="tb-q">¿Qué evidencia mínima necesitamos antes de invertir?</div>
+          <div class="tb-desc">Identificar la señal mínima de PMF que justifica avanzar: entrevistas, smoke tests o prototipos de baja fidelidad antes del sprint de desarrollo.</div>
+        </div>
+        <div class="tmodal-block tb-green">
+          <div class="tb-label gl">🚀 Go-to-Market</div>
+          <div class="tb-q">¿Quién es el segmento, por qué canal y en qué momento del journey?</div>
+          <div class="tb-desc">Identificar segmento potencial, canal de llegada y momento de activación antes de construir — no después del lanzamiento.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tension modal tension-p1 -->
+<div class="modal-overlay" id="tension-p1" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,255,255,.1);">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);">Tensiones de decisión</div>
+      <div class="modal-title">F2 · Lanzamiento MVP — Tensiones de decisión</div>
+      <button class="modal-close" onclick="closeModal('tension-p1')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmodal-row">
+        <div class="tmodal-block tb-red">
+          <div class="tb-label rl">⚖️ Trade-off</div>
+          <div class="tb-q">¿MVP usable vs experiencia completa?</div>
+          <div class="tb-desc">Salir con lo mínimo que permita aprender sin romper la confianza del cliente. La experiencia incompleta tiene un costo en adopción que debe declararse.</div>
+        </div>
+        <div class="tmodal-block tb-blue">
+          <div class="tb-label bl">⏱ Time to Market</div>
+          <div class="tb-q">¿Qué es lo mínimo que permite aprender sin dañar la confianza?</div>
+          <div class="tb-desc">Definir el criterio de 'listo para salir': flujo core funcional, sin fricciones críticas, con métricas de activación activadas desde el día uno.</div>
+        </div>
+        <div class="tmodal-block tb-green">
+          <div class="tb-label gl">🚀 Go-to-Market</div>
+          <div class="tb-q">¿Cómo se activa la adopción inicial y se comunica el valor?</div>
+          <div class="tb-desc">Definir mensaje de valor, canal de activación y segmento inicial. Producción sin GTM claro es capacidad desplegada sin demanda activada.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tension modal tension-p2 -->
+<div class="modal-overlay" id="tension-p2" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,255,255,.1);">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);">Tensiones de decisión</div>
+      <div class="modal-title">F3 · Post-lanzamiento — Tensiones de decisión</div>
+      <button class="modal-close" onclick="closeModal('tension-p2')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmodal-row">
+        <div class="tmodal-block tb-red">
+          <div class="tb-label rl">⚖️ Trade-off</div>
+          <div class="tb-q">¿Optimizar core vs agregar nuevas features?</div>
+          <div class="tb-desc">Corregir las fricciones críticas del flujo existente antes de ampliar alcance. Agregar features sobre una base inestable multiplica la deuda UX.</div>
+        </div>
+        <div class="tmodal-block tb-blue">
+          <div class="tb-label bl">⏱ Time to Market</div>
+          <div class="tb-q">¿Cuáles son las fricciones críticas que deben corregirse antes de escalar?</div>
+          <div class="tb-desc">Priorizar los problemas de retención y fricción sobre las nuevas funcionalidades. La velocidad de corrección importa más que la velocidad de adición.</div>
+        </div>
+        <div class="tmodal-block tb-green">
+          <div class="tb-label gl">🚀 Go-to-Market</div>
+          <div class="tb-q">¿Qué ajustar en canal, mensaje o journey según los datos de adopción real?</div>
+          <div class="tb-desc">Contrastar la hipótesis GTM inicial con el comportamiento real del cliente. Ajustar segmento, canal o mensaje según lo que los datos muestran.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tension modal tension-p3 -->
+<div class="modal-overlay" id="tension-p3" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,255,255,.1);">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);">Tensiones de decisión</div>
+      <div class="modal-title">F4 · Crecimiento — Tensiones de decisión</div>
+      <button class="modal-close" onclick="closeModal('tension-p3')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmodal-row">
+        <div class="tmodal-block tb-red">
+          <div class="tb-label rl">⚖️ Trade-off</div>
+          <div class="tb-q">¿Escala comercial vs calidad de experiencia?</div>
+          <div class="tb-desc">Acelerar la expansión sin deteriorar la conversión ni el soporte. La calidad de experiencia es una condición de escala sostenible, no un lujo.</div>
+        </div>
+        <div class="tmodal-block tb-blue">
+          <div class="tb-label bl">⏱ Time to Market</div>
+          <div class="tb-q">¿Cómo acelerar sin deteriorar conversión ni soporte?</div>
+          <div class="tb-desc">Definir el umbral de calidad mínima aceptable antes de escalar. Escalar con fricciones no resueltas multiplica el costo operativo y el churn.</div>
+        </div>
+        <div class="tmodal-block tb-green">
+          <div class="tb-label gl">🚀 Go-to-Market</div>
+          <div class="tb-q">¿Hacia qué segmentos o canales escalar según la mejor respuesta observada?</div>
+          <div class="tb-desc">Identificar los segmentos con mejor tasa de activación y retención para priorizar la expansión. Escalar donde el PMF está más probado.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tension modal tension-p4 -->
+<div class="modal-overlay" id="tension-p4" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,255,255,.1);">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);">Tensiones de decisión</div>
+      <div class="modal-title">F5 · Madurez — Tensiones de decisión</div>
+      <button class="modal-close" onclick="closeModal('tension-p4')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmodal-row">
+        <div class="tmodal-block tb-red">
+          <div class="tb-label rl">⚖️ Trade-off</div>
+          <div class="tb-q">¿Cross-sell y revenue vs confianza y relevancia del cliente?</div>
+          <div class="tb-desc">Mejorar la eficiencia sin saturar al cliente. El cross-sell en momentos de fricción deteriora la confianza y el NPS relacional.</div>
+        </div>
+        <div class="tmodal-block tb-blue">
+          <div class="tb-label bl">⏱ Time to Market</div>
+          <div class="tb-q">¿Cómo mejorar la eficiencia sin saturar al cliente?</div>
+          <div class="tb-desc">Evaluar el momento correcto del journey para introducir nuevas ofertas. La relevancia contextual es más efectiva que la frecuencia de exposición.</div>
+        </div>
+        <div class="tmodal-block tb-green">
+          <div class="tb-label gl">🚀 Go-to-Market</div>
+          <div class="tb-q">¿Cómo profundizar el valor con ofertas contextuales y relevantes?</div>
+          <div class="tb-desc">Conectar las ofertas de cross-sell con el momento del journey donde el cliente tiene mayor intención. Data de uso como señal de activación.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tension modal tension-p5 -->
+<div class="modal-overlay" id="tension-p5" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,255,255,.1);">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);color:var(--t2);">Tensiones de decisión</div>
+      <div class="modal-title">F6 · Evolución — Tensiones de decisión</div>
+      <button class="modal-close" onclick="closeModal('tension-p5')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tmodal-row">
+        <div class="tmodal-block tb-red">
+          <div class="tb-label rl">⚖️ Trade-off</div>
+          <div class="tb-q">¿Optimización incremental vs reinvención?</div>
+          <div class="tb-desc">Decidir si seguir iterando sobre lo existente o activar el Renewal Loop. La optimización incremental sobre un producto obsoleto no genera ventaja competitiva.</div>
+        </div>
+        <div class="tmodal-block tb-blue">
+          <div class="tb-label bl">⏱ Time to Market</div>
+          <div class="tb-q">¿Cuándo iterar y cuándo activar el Renewal Loop?</div>
+          <div class="tb-desc">Definir las señales de obsolescencia que justifican reiniciar el ciclo: caída de relevancia percibida, reducción de adopción o cambio de contexto del cliente.</div>
+        </div>
+        <div class="tmodal-block tb-green">
+          <div class="tb-label gl">🚀 Go-to-Market</div>
+          <div class="tb-q">¿Cómo reposicionar propuesta, canal, segmento o narrativa?</div>
+          <div class="tb-desc">Reiniciar el GTM con nuevas hipótesis basadas en el contexto actual del mercado y el cliente. El PD activa el Renewal Loop antes de que el producto decline.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Riesgos del Piloto -->
+<div class="modal-overlay" id="modal-risks-pilot" onclick="closeModalOutside(event,this)">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box" style="border-color:rgba(255,111,97,.2);max-width:720px;">
+    <div class="modal-header">
+      <div class="modal-tag" style="background:rgba(255,111,97,.1);border:1px solid rgba(255,111,97,.25);color:var(--c3);">Gobernanza del Piloto</div>
+      <div class="modal-title">Riesgos relevantes & Mitigaciones</div>
+      <button class="modal-close" onclick="closeModal('modal-risks-pilot')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+        <div class="g" style="padding:14px 16px;background:rgba(255,255,255,.02);border-color:rgba(255,111,97,.2);">
+          <div style="font-family:var(--fm);font-size:.58rem;color:var(--c3);margin-bottom:5px;letter-spacing:.1em;text-transform:uppercase;">Riesgo 01 · Priorización</div>
+          <div style="font-weight:700;font-size:.9rem;margin-bottom:5px;">Propuestas no priorizadas por capacidad / roadmap</div>
+          <div style="font-size:.78rem;color:var(--t3);line-height:1.6;"><span style="color:var(--red);">● Impacto:</span> Baja moral, pérdida de adopción y backlogs invisibles.<br><span style="color:var(--c5);">🛡 Mitigación:</span> Revisiones quincenales donde PM/Líder justifique la priorización.<br><span style="color:var(--c1);">📊 Métrica:</span> % Propuestas evaluadas x semana.</div>
+        </div>
+        <div class="g" style="padding:14px 16px;background:rgba(255,255,255,.02);border-color:rgba(91,143,255,.2);">
+          <div style="font-family:var(--fm);font-size:.58rem;color:var(--c1);margin-bottom:5px;letter-spacing:.1em;text-transform:uppercase;">Riesgo 02 · Visibilidad</div>
+          <div style="font-weight:700;font-size:.9rem;margin-bottom:5px;">Falta de visibilidad sobre resultados del piloto</div>
+          <div style="font-size:.78rem;color:var(--t3);line-height:1.6;"><span style="color:var(--c5);">🛡 Mitigación:</span> Showcases quincenales con el equipo UX y líderes del CoE.<br><span style="color:var(--c1);">📊 Métrica:</span> Número de demostraciones realizadas.</div>
+        </div>
+        <div class="g" style="padding:14px 16px;background:rgba(255,255,255,.02);border-color:rgba(255,184,54,.2);">
+          <div style="font-family:var(--fm);font-size:.58rem;color:var(--c4);margin-bottom:5px;letter-spacing:.1em;text-transform:uppercase;">Riesgo 03 · Datos</div>
+          <div style="font-weight:700;font-size:.9rem;margin-bottom:5px;">Falta de datos o señal para validar impacto</div>
+          <div style="font-size:.78rem;color:var(--t3);line-height:1.6;"><span style="color:var(--c5);">🛡 Mitigación:</span> Plan de instrumentación mínimo (Métrica, Baseline, Señal de éxito) como prerrequisito.<br><span style="color:var(--c1);">📊 Métrica:</span> % Entregables con baseline definido.</div>
+        </div>
+        <div class="g" style="padding:14px 16px;background:rgba(255,255,255,.02);border-color:rgba(176,106,255,.2);">
+          <div style="font-family:var(--fm);font-size:.58rem;color:var(--c2);margin-bottom:5px;letter-spacing:.1em;text-transform:uppercase;">Riesgo 04 · Procesos</div>
+          <div style="font-weight:700;font-size:.9rem;margin-bottom:5px;">Resistencia a cambiar procesos</div>
+          <div style="font-size:.78rem;color:var(--t3);line-height:1.6;"><span style="color:var(--c5);">🛡 Mitigación:</span> Acompañamiento activo de líderes, involucramiento de Tribe Leads y mapeo de trade-offs.<br><span style="color:var(--c1);">📊 Métrica:</span> Número de Sponsors activos en el piloto.</div>
+        </div>
+        <div class="g" style="padding:14px 16px;background:rgba(255,255,255,.02);border-color:rgba(0,229,204,.2);">
+          <div style="font-family:var(--fm);font-size:.58rem;color:var(--c0);margin-bottom:5px;letter-spacing:.1em;text-transform:uppercase;">Riesgo 05 · Dependencias</div>
+          <div style="font-weight:700;font-size:.9rem;margin-bottom:5px;">Bloqueos técnicos o regulatorios en experimentos</div>
+          <div style="font-size:.78rem;color:var(--t3);line-height:1.6;"><span style="color:var(--c5);">🛡 Mitigación:</span> Mapear dependencias en el PMF Readiness; priorizar mitigación temprana o diseños no invasivos.<br><span style="color:var(--c1);">📊 Métrica:</span> Dependencias identificadas vs. resueltas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
